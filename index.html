@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -38,506 +39,100 @@
 
     <!-- React App Script with Babel execution -->
     <script type="text/babel">
-        const { useState, useMemo } = React;
+        const { useState, useMemo, useEffect } = React;
 
-        // --- INLINE SVG ICONS WRAPPERS (To guarantee offline/fast rendering without external icon font deps) ---
+        // --- INLINE SVG ICONS WRAPPERS ---
         const IconSparkles = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/><path d="m5 3 1 2.5L8.5 6 6 7 5 9.5 4 7 1.5 6 4 5.5Z"/><path d="m19 17 1 2.5 2.5.5-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275Z"/><path d="m5 3 1 2.5L8.5 6 6 7 5 9.5 4 7 1.5 6 4 5.5Z"/><path d="m19 17 1 2.5 2.5.5-2.5 1-1 2.5-1-2.5-2.5-1 2.5-1Z"/></svg>
         );
         const IconHeart = ({ className = "" }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`lucide lucide-heart ${className}`}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
         );
         const IconBaby = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-baby"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 1 1-.8 3.8 9 9 0 0 1-16 0 2 2 0 1 1-.8-3.8A9 9 0 0 1 5 6.3"/><path d="M12 2.1a9 9 0 0 1 4 1.8V4a2 2 0 0 1-4 0ZM12 2.1a9 9 0 0 0-4 1.8V4a2 2 0 0 1 4 0Z"/><path d="M19 6.3a9 9 0 0 0-14 0"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12h.01"/><path d="M15 12h.01"/><path d="M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5"/><path d="M19 6.3a9 9 0 0 1 1.8 3.9 2 2 0 1 1-.8 3.8 9 9 0 0 1-16 0 2 2 0 1 1-.8-3.8A9 9 0 0 1 5 6.3"/><path d="M12 2.1a9 9 0 0 1 4 1.8V4a2 2 0 0 1-4 0ZM12 2.1a9 9 0 0 0-4 1.8V4a2 2 0 0 1 4 0Z"/><path d="M19 6.3a9 9 0 0 0-14 0"/></svg>
         );
         const IconUtensils = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-utensils"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Z"/><path d="M18 22V15"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Z"/><path d="M18 22V15"/></svg>
         );
         const IconCalendar = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-calendar"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg>
         );
         const IconInfo = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
         );
         const IconRotateCcw = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-rotate-ccw"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
         );
         const IconCalculator = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-calculator"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
         );
         const IconShoppingBag = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shopping-bag"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         );
         const IconBookOpen = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         );
         const IconCheckCircle2 = ({ className = "" }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`lucide lucide-check-circle-2 ${className}`}><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
         );
         const IconAlertTriangle = ({ className = "" }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`lucide lucide-alert-triangle ${className}`}><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" x2="12" y1="9" y2="13"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
         );
         const IconChevronLeft = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-left"><path d="m15 18-6-6 6-6"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         );
         const IconChevronRight = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
         );
 
         // --- DATABASE: 40 WEEKS OF FETAL DEVELOPMENT ---
         const WEEKS_DEVELOPMENT = {
-          1: {
-            title: "Chuẩn bị rụng trứng",
-            sizeComparison: "Chưa có kích thước",
-            weight: "~ 0 g",
-            length: "~ 0 mm",
-            fruitIcon: "🥚",
-            fruitName: "Tế bào trứng chuẩn bị",
-            description: "Cơ thể mẹ đang ở chu kỳ kinh nguyệt cuối cùng. Tử cung bắt đầu làm dày lớp niêm mạc giàu chất dinh dưỡng để sẵn sàng đón nhận trứng thụ tinh.",
-            babyMilestone: "Trứng rụng và chuẩn bị gặp tinh trùng để tạo nên một mầm sống mới.",
-            momCare: "Uống bổ sung Acid Folic ngay từ lúc này (400 mcg/ngày) để giảm 90% nguy cơ dị tật ống thần kinh sau này."
-          },
-          2: {
-            title: "Sự thụ thai kỳ diệu",
-            sizeComparison: "Siêu nhỏ",
-            weight: "~ 0 g",
-            length: "~ 0.1 mm",
-            fruitIcon: "✨",
-            fruitName: "Hợp tử siêu nhỏ",
-            description: "Sự thụ tinh xảy ra khi tinh trùng gặp trứng tại ống dẫn trứng tạo thành hợp tử. Giới tính và toàn bộ đặc điểm di truyền của bé đã được quyết định ngay tại giây phút này.",
-            babyMilestone: "Hợp tử bắt đầu phân bào liên tục và di chuyển dần về phía tử cung.",
-            momCare: "Giữ tinh thần thoải mái, tránh xa khói thuốc lá, rượu bia và các chất kích thích."
-          },
-          3: {
-            title: "Làm tổ trong tử cung",
-            sizeComparison: "Kích thước bằng một hạt cát nhỏ",
-            weight: "~ 0.1 g",
-            length: "~ 0.15 mm",
-            fruitIcon: "🥪",
-            fruitName: "Hạt muối nhỏ",
-            description: "Phôi dâu nay đã phát triển thành phôi nang và bám chặt vào lớp niêm mạc tử cung để làm tổ vững chắc.",
-            babyMilestone: "Hình thành các lớp tế bào ban đầu: nội bì, trung bì và ngoại bì để sau này phát triển thành các cơ quan riêng biệt.",
-            momCare: "Tránh các hoạt động thể chất quá mạnh hay mang vác vật nặng. Ăn các thực phẩm ấm, dễ tiêu."
-          },
-          4: {
-            title: "Mầm sống bén rễ",
-            sizeComparison: "Bằng hạt anh túc (Poppy seed)",
-            weight: "~ 0.2 g",
-            length: "~ 0.36 mm",
-            fruitIcon: "🍓",
-            fruitName: "Hạt anh túc",
-            description: "Phôi thai lúc này đã bám rễ sâu vào tử cung. Các mạch máu đầu tiên liên kết mẹ và bé bắt đầu hình thành.",
-            babyMilestone: "Sự hình thành nhau thai sơ khai bắt đầu sản sinh hormone hCG (khiến que thử thai lên 2 vạch).",
-            momCare: "Mẹ có thể dùng que thử thai để kiểm tra. Hãy hẹn lịch khám với bác sĩ sản khoa lần đầu tiên."
-          },
-          5: {
-            title: "Ống thần kinh đóng lại",
-            sizeComparison: "Bằng hạt táo nhỏ",
-            weight: "~ 0.4 g",
-            length: "~ 1.25 mm",
-            fruitIcon: "🍎",
-            fruitName: "Hạt táo",
-            description: "Ống thần kinh của bé (sẽ phát triển thành não bộ và tủy sống) chính thức đóng lại trong tuần này.",
-            babyMilestone: "Tim thai thô sơ bắt đầu đập những nhịp đầu tiên, hệ tuần hoàn thô sơ bắt đầu hoạt động.",
-            momCare: "Duy trì uống Acid Folic và Sắt đều đặn. Nếu bắt đầu nghén, hãy uống trà gừng ấm để làm dịu dạ dày."
-          },
-          6: {
-            title: "Tim thai đập rộn ràng",
-            sizeComparison: "Bằng một hạt đậu xanh",
-            weight: "~ 0.8 g",
-            length: "~ 4 mm",
-            fruitIcon: "🥦",
-            fruitName: "Hạt đậu xanh",
-            description: "Tim của bé hiện tại đập khoảng 100 - 150 nhịp/phút (nhanh gấp đôi người lớn). Các chồi tay và chân bắt đầu nhú ra.",
-            babyMilestone: "Mũi, miệng và tai của bé bắt đầu định hình rõ rệt trên siêu âm độ phân giải cao.",
-            momCare: "Tránh tự ý uống bất kỳ loại thuốc nào mà chưa có sự đồng ý của bác sĩ sản khoa."
-          },
-          7: {
-            title: "Chồi tay chân phát triển",
-            sizeComparison: "Bằng một quả việt quất",
-            weight: "~ 1 g",
-            length: "~ 8 mm",
-            fruitIcon: "🫐",
-            fruitName: "Quả việt quất",
-            description: "Não bộ phát triển thần tốc, sản sinh ra hàng trăm ngàn tế bào thần kinh mới mỗi phút. Các chồi chi dài ra rõ rệt.",
-            babyMilestone: "Ống dẫn thở bắt đầu nối dài từ cổ họng đến lá phổi sơ khai của bé.",
-            momCare: "Nên ăn nhiều bữa nhỏ để đối phó với chứng buồn nôn. Hãy chuẩn bị sẵn bánh quy lạt bên giường."
-          },
-          8: {
-            title: "Hình thành ngón tay, ngón chân",
-            sizeComparison: "Bằng một quả mâm xôi",
-            weight: "~ 1.5 g",
-            length: "~ 1.6 cm",
-            fruitIcon: "🍒",
-            fruitName: "Quả mâm xôi",
-            description: "Các ngón tay và chân nhỏ xíu có màng đang hình thành. Bé bắt đầu có những cử động tự phát nhưng mẹ chưa thể cảm nhận được.",
-            babyMilestone: "Hệ xương khớp bắt đầu quá trình sụn hóa. Đuôi phôi thai nhỏ dần và chuẩn bị biến mất.",
-            momCare: "Cần bổ sung thêm thực phẩm dồi dào canxi từ sữa tiệt trùng, phô mai để hỗ trợ hình thành sụn xương."
-          },
-          9: {
-            title: "Bé chính thức là 'Thai nhi'",
-            sizeComparison: "Bằng một quả nho lớn",
-            weight: "~ 2 g",
-            length: "~ 2.3 cm",
-            fruitIcon: "🍇",
-            fruitName: "Quả nho lớn",
-            description: "Đuôi phôi thai đã hoàn toàn biến mất. Giai đoạn phôi kết thúc, em bé chính thức được gọi y học là 'Thai nhi'.",
-            babyMilestone: "Nhịp tim thai đạt đỉnh khoảng 170 nhịp/phút. Các cơ quan nội tạng quan trọng bắt đầu tự định vị trí.",
-            momCare: "Uống nhiều nước ấm (2 lít mỗi ngày). Hạn chế tối đa đồ ăn dầu mỡ gây khó tiêu, trào ngược dạ dày."
-          },
-          10: {
-            title: "Các khớp hoạt động",
-            sizeComparison: "Bằng quả quất (tắc) chín",
-            weight: "~ 4 g",
-            length: "~ 3.1 cm",
-            fruitIcon: "🍊",
-            fruitName: "Quả quất chín",
-            description: "Xương sườn và xương sống của bé đang định hình rõ nét. Các khớp khuỷu tay và đầu gối đã có thể gập mở.",
-            babyMilestone: "Móng tay và móng chân siêu nhỏ bắt đầu xuất hiện dưới lớp da mỏng manh.",
-            momCare: "Mẹ hãy đi xét nghiệm công thức máu toàn phần nếu chưa thực hiện để phát hiện sớm tình trạng thiếu máu."
-          },
-          11: {
-            title: "Phản xạ ban đầu",
-            sizeComparison: "Bằng một quả sung ngọt",
-            weight: "~ 7 g",
-            length: "~ 4.1 cm",
-            fruitIcon: "🍍",
-            fruitName: "Quả sung ngọt",
-            description: "Bé đã có thể mở và khép bàn tay nhỏ bé của mình. Hệ tiêu hóa (ruột) bắt đầu di chuyển từ dây rốn về khoang bụng.",
-            babyMilestone: "Bé bắt đầu tập nuốt nước ối và thận bắt đầu lọc, bài tiết nước tiểu thô sơ ra môi trường ối.",
-            momCare: "Thích hợp nhất để làm xét nghiệm sàng lọc không xâm lấn NIPT hoặc Double Test (Tuần 11 - 13) để phát hiện dị tật nhiễm sắc thể."
-          },
-          12: {
-            title: "Hoàn thiện cấu trúc sơ bộ",
-            sizeComparison: "Bằng một quả chanh ta",
-            weight: "~ 14 g",
-            length: "~ 5.4 cm",
-            fruitIcon: "🍋",
-            fruitName: "Quả chanh ta",
-            description: "Gần như toàn bộ hệ thống cơ quan của bé đã phát triển hoàn chỉnh cấu trúc cơ bản. Nguy cơ sảy thai tự nhiên giảm mạnh.",
-            babyMilestone: "Hệ thống thần kinh phản xạ phát triển mạnh, bé sẽ giật mình nhẹ nếu mẹ ấn nhẹ vào bụng.",
-            momCare: "Đây là mốc đo độ mờ da gáy cực kỳ quan trọng bằng siêu âm để tầm soát hội chứng Down."
-          },
-          13: {
-            title: "Vân tay xuất hiện",
-            sizeComparison: "Bằng một quả chanh leo",
-            weight: "~ 23 g",
-            length: "~ 7.4 cm",
-            fruitIcon: "🥔",
-            fruitName: "Quả chanh leo",
-            description: "Tuần cuối cùng của Tam cá nguyệt thứ 1. Dấu vân tay độc nhất vô nhị của bé đã hình thành trên các đầu ngón tay.",
-            babyMilestone: "Nhau thai đã phát triển toàn diện và tiếp quản hoàn toàn nhiệm vụ cung cấp oxy và dưỡng chất từ mẹ sang bé.",
-            momCare: "Chúc mừng mẹ đã vượt qua chặng đường nhạy cảm nhất! Cơn nghén sẽ giảm dần từ tuần tới, mẹ có thể bắt đầu ăn ngon miệng hơn."
-          },
-          14: {
-            title: "Bắt đầu Tam cá nguyệt 2",
-            sizeComparison: "Bằng một quả chanh vàng lớn",
-            weight: "~ 43 g",
-            length: "~ 8.7 cm",
-            fruitIcon: "🍋",
-            fruitName: "Quả chanh vàng",
-            description: "Bé bắt đầu biết nheo mắt, nhăn mặt và có thể mút ngón tay cái của mình. Thận hoạt động đều đặn để bài tiết nước ối.",
-            babyMilestone: "Lông tơ mịn (lanugo) bắt đầu mọc khắp cơ thể để giữ ấm và bảo vệ làn da mỏng dưới nước ối.",
-            momCare: "Nhu cầu canxi của bé bắt đầu tăng cao. Hãy ăn nhiều thực phẩm giàu canxi và bổ sung viên uống theo chỉ định."
-          },
-          15: {
-            title: "Xương bắt đầu cứng cáp",
-            sizeComparison: "Bằng một quả táo ta lớn",
-            weight: "~ 70 g",
-            length: "~ 10 cm",
-            fruitIcon: "🍎",
-            fruitName: "Quả táo ta",
-            description: "Khung xương của bé bắt đầu chuyển hóa từ sụn dẻo thành xương cứng (quá trình cốt hóa). Da của bé lúc này vẫn còn rất mỏng, nhìn rõ các mạch máu bên dưới.",
-            babyMilestone: "Bé bắt đầu thực hiện các động tác hít thở nước ối để luyện cơ phổi nở ra.",
-            momCare: "Nếu thấy nướu (lợi) dễ bị chảy máu khi đánh răng, hãy dùng bàn chải lông mềm và khám nha khoa định kỳ."
-          },
-          16: {
-            title: "Cảm nhận ánh sáng",
-            sizeComparison: "Bằng một quả bơ nhỏ",
-            weight: "~ 100 g",
-            length: "~ 11.6 cm",
-            fruitIcon: "🥑",
-            fruitName: "Quả bơ nhỏ",
-            description: "Mắt của bé mặc dù vẫn nhắm chặt nhưng đã bắt đầu nhạy cảm với ánh sáng mạnh rọi qua thành bụng của mẹ.",
-            babyMilestone: "Đầu của bé đã đứng thẳng hơn so với cơ thể, tai di chuyển về đúng vị trí hai bên đầu.",
-            momCare: "Thích hợp làm xét nghiệm Triple Test (Tuần 15 - 18) nếu trước đó mẹ chưa làm Double Test hay NIPT."
-          },
-          17: {
-            title: "Tích lũy mỡ nâu",
-            sizeComparison: "Bằng một quả lựu",
-            weight: "~ 140 g",
-            length: "~ 13 cm",
-            fruitIcon: "🧅",
-            fruitName: "Quả lựu",
-            description: "Một lớp mỡ đặc biệt (mỡ nâu) bắt đầu tích tụ dưới da của bé, đóng vai trò giữ ấm cơ thể ngay sau khi bé chào đời.",
-            babyMilestone: "Hệ tuần hoàn phát triển mạnh mẽ, tim bé bơm khoảng 25 lít máu mỗi ngày đi khắp cơ thể nhỏ bé.",
-            momCare: "Tránh nằm ngửa khi ngủ. Nên bắt đầu nằm nghiêng sang bên trái để tối ưu dòng máu truyền qua nhau thai."
-          },
-          18: {
-            title: "Bé nghe thấy tiếng mẹ",
-            sizeComparison: "Bằng quả ớt chuông lớn",
-            weight: "~ 190 g",
-            length: "~ 14.2 cm",
-            fruitIcon: "🫑",
-            fruitName: "Quả ớt chuông",
-            description: "Các xương nhỏ trong tai trong đã phát triển hoàn thiện giúp bé bắt đầu nghe thấy âm thanh từ thế giới bên ngoài rõ nét.",
-            babyMilestone: "Bé có thể giật mình hoặc đạp mạnh hơn khi nghe thấy tiếng động lớn đột ngột ngoài môi trường.",
-            momCare: "Bắt đầu trò chuyện, đọc sách hoặc cho bé nghe những giai điệu nhạc êm dịu. Đây là phương pháp thai giáo âm thanh tuyệt vời."
-          },
-          19: {
-            title: "Lớp màng bảo vệ da",
-            sizeComparison: "Bằng quả cà chua lớn",
-            weight: "~ 240 g",
-            length: "~ 15.3 cm",
-            fruitIcon: "🍅",
-            fruitName: "Quả cà chua lớn",
-            description: "Lớp chất gây (vernix caseosa) màu trắng, trơn bóng bao phủ khắp làn da bé để bảo vệ da không bị trầy xước hay nhăn nheo trong nước ối.",
-            babyMilestone: "Các tế bào thần kinh chuyên biệt cho từng giác quan (khứu giác, vị giác, thị giác, thính giác) phát triển chuyên sâu.",
-            momCare: "Cảm giác thèm ăn tăng mạnh. Hãy kiểm soát chất lượng đồ ăn, ưu tiên protein và chất xơ hơn là tinh bột ngọt."
-          },
-          20: {
-            title: "Cột mốc nửa chặng đường",
-            sizeComparison: "Bằng một quả chuối tiêu lớn",
-            weight: "~ 300 g",
-            length: "~ 25.6 cm (Đo từ đầu đến chân)",
-            fruitIcon: "🍌",
-            fruitName: "Quả chuối tiêu",
-            description: "Mẹ đã đi được một nửa hành trình mang thai! Tử cung của mẹ lúc này đã phát triển cao ngang rốn.",
-            babyMilestone: "Mẹ bắt đầu cảm nhận rất rõ các cú máy, đạp, nhào lộn tinh nghịch đầu tiên của bé (thai máy).",
-            momCare: "Thời điểm vàng để thực hiện Siêu âm hình thái học 4D (Tuần 20 - 24) để rà soát toàn bộ cấu trúc cơ thể bé."
-          },
-          21: {
-            title: "Nuốt nước ối đều đặn",
-            sizeComparison: "Bằng một củ cà rốt lớn",
-            weight: "~ 360 g",
-            length: "~ 26.7 cm",
-            fruitIcon: "🥕",
-            fruitName: "Củ cà rốt lớn",
-            description: "Hệ tiêu hóa của bé tiếp tục hoàn thiện thông qua việc nuốt nước ối thường xuyên. Phân su màu xanh đen bắt đầu tích tụ trong ruột bé.",
-            babyMilestone: "Bé bắt đầu có chu kỳ ngủ và thức rõ ràng. Khi bé thức sẽ chuyển động nhiều hơn.",
-            momCare: "Tăng cường uống nước lọc ấm và ăn nhiều rau xanh để phòng ngừa trĩ và táo bón thai kỳ đang gia tăng."
-          },
-          22: {
-            title: "Vị giác hình thành",
-            sizeComparison: "Bằng một quả đu đủ nhỏ",
-            weight: "~ 430 g",
-            length: "~ 27.8 cm",
-            fruitIcon: "🥭",
-            fruitName: "Quả đu đủ nhỏ",
-            description: "Các gai vị giác trên lưỡi của bé đã hình thành đầy đủ. Bé có thể cảm nhận được mùi vị của nước ối (vốn thay đổi theo món ăn của mẹ).",
-            babyMilestone: "Lông mày và mí mắt đã hoàn toàn định hình xong.",
-            momCare: "Mẹ ăn đa dạng các món ăn lành mạnh để bé làm quen với nhiều hương vị khác nhau ngay từ trong bụng mẹ."
-          },
-          23: {
-            title: "Sản sinh chất diện hoạt",
-            sizeComparison: "Bằng một quả bưởi nhỏ",
-            weight: "~ 500 g",
-            length: "~ 28.9 cm",
-            fruitIcon: "🍊",
-            fruitName: "Quả bưởi nhỏ",
-            description: "Phổi của bé bắt đầu sản sinh ra chất diện hoạt (surfactant) - chất giúp các túi phổi không bị xẹp lại khi bé hít thở không khí sau này.",
-            babyMilestone: "Da bé chuyển sang màu đỏ hồng do các mạch máu li ti dưới da phát triển mạnh mẽ.",
-            momCare: "Khi đi xe máy hoặc ô tô, mẹ lưu ý thắt dây an toàn vòng xuống dưới bụng bầu để tránh lực ép vào tử cung."
-          },
-          24: {
-            title: "Cột mốc sống sót tối thiểu",
-            sizeComparison: "Bằng một bắp ngô ngọt lớn",
-            weight: "~ 600 g",
-            length: "~ 30 cm",
-            fruitIcon: "🌽",
-            fruitName: "Bắp ngô ngọt",
-            description: "Mốc phát triển y học tối thiểu. Nếu chẳng may sinh non ở tuần này, em bé đã có cơ hội sống sót nếu được chăm sóc y tế tích cực.",
-            babyMilestone: "Các phế nang phổi bắt đầu hình thành liên tục giúp hệ hô hấp chuẩn bị hoạt động độc lập.",
-            momCare: "Giai đoạn quan trọng để làm xét nghiệm dung nạp đường huyết (Tuần 24 - 28) để tầm soát tiểu đường thai kỳ."
-          },
-          25: {
-            title: "Bé bắt đầu mở mắt",
-            sizeComparison: "Bằng một quả súp lơ xanh",
-            weight: "~ 660 g",
-            length: "~ 34.6 cm",
-            fruitIcon: "🥦",
-            fruitName: "Quả súp lơ xanh",
-            description: "Mắt của bé bắt đầu hé mở và có thể chớp mắt thường xuyên. Cấu trúc cột sống cứng cáp hơn để nâng đỡ cơ thể bé.",
-            babyMilestone: "Hệ thống mạch máu trong phổi phát triển vượt bậc để chuẩn bị cho nhịp thở đầu đời.",
-            momCare: "Nếu mẹ thấy tay chân bị tê bì hoặc đau lưng nhiều, hãy thử tập các bài yoga bầu nhẹ nhàng hoặc massage chuyên biệt."
-          },
-          26: {
-            title: "Sóng não hoạt động mạnh",
-            sizeComparison: "Bằng một quả dưa hấu tí hon",
-            weight: "~ 760 g",
-            length: "~ 35.6 cm",
-            fruitIcon: "🍉",
-            fruitName: "Dưa hấu tí hon",
-            description: "Các dây thần kinh trong tai phát triển hoàn chỉnh hơn giúp bé nhạy cảm và phản ứng linh hoạt với giọng nói của cả bố và mẹ.",
-            babyMilestone: "Sóng não của bé bắt đầu hoạt động mạnh mẽ, ghi nhận hệ thống phản xạ thần kinh ngày một tinh vi.",
-            momCare: "Bố hãy tích cực trò chuyện áp tai vào bụng mẹ để bé quen giọng nói trầm ấm của bố."
-          },
-          27: {
-            title: "Kết thúc Tam cá nguyệt 2",
-            sizeComparison: "Bằng một cây cải bắp lớn",
-            weight: "~ 875 g",
-            length: "~ 36.6 cm",
-            fruitIcon: "🥬",
-            fruitName: "Cải bắp lớn",
-            description: "Tuần cuối cùng của tam cá nguyệt thứ 2. Phổi, gan và hệ thống miễn dịch của bé tiếp tục hoàn thiện các bước cuối.",
-            babyMilestone: "Bé bắt đầu xuất hiện những nhịp nấc cụt thường xuyên do tập hít thở nước ối (mẹ cảm nhận như những nhịp giật nhẹ đều đặn).",
-            momCare: "Mẹ nên đo huyết áp thường xuyên để phát hiện sớm nguy cơ tiền sản giật (nếu có)."
-          },
-          28: {
-            title: "Bắt đầu Tam cá nguyệt 3",
-            sizeComparison: "Bằng một quả dừa",
-            weight: "~ 1 kg",
-            length: "~ 37.6 cm",
-            fruitIcon: "🥥",
-            fruitName: "Quả dừa",
-            description: "Chào mừng mẹ đến với 3 tháng cuối! Bé cưng lúc này đã nặng khoảng 1 kg. Mắt bé có thể nhắm mở và nhìn xung quanh linh hoạt.",
-            babyMilestone: "Lớp lông tơ bắt đầu rụng dần, mỡ dưới da tiếp tục tích tụ nhanh chóng.",
-            momCare: "Cần tăng cường uống viên Sắt và Canxi đầy đủ vì đây là lúc bé hút dưỡng chất từ mẹ mạnh mẽ nhất để bứt phá cân nặng."
-          },
-          29: {
-            title: "Não bộ phát triển bùng nổ",
-            sizeComparison: "Bằng một quả bí ngô nhỏ",
-            weight: "~ 1.15 kg",
-            length: "~ 38.6 cm",
-            fruitIcon: "🎃",
-            fruitName: "Quả bí ngô nhỏ",
-            description: "Bộ não phát triển rất nhanh, bắt đầu xuất hiện các nếp nhăn và rãnh não sâu để tăng diện tích chứa tế bào thần kinh.",
-            babyMilestone: "Bé đã có thể tự điều hòa thân nhiệt ở mức ổn định nhờ sự phát triển của hệ thần kinh trung ương.",
-            momCare: "Bổ sung lượng DHA dồi dào từ cá hồi, trứng và quả óc chó để hỗ trợ quá trình hình thành não bộ của con yêu."
-          },
-          30: {
-            title: "Không gian chật chội",
-            sizeComparison: "Bằng một bắp cải thảo lớn",
-            weight: "~ 1.3 kg",
-            length: "~ 39.9 cm",
-            fruitIcon: "🥬",
-            fruitName: "Bắp cải thảo lớn",
-            description: "Bé đã chiếm phần lớn không gian trong tử cung của mẹ. Lượng nước ối bắt đầu giảm dần nhường chỗ cho em bé lớn lên.",
-            babyMilestone: "Tủy xương đã tiếp quản hoàn toàn nhiệm vụ sản xuất hồng cầu thay cho lá gan và lá lách.",
-            momCare: "Mẹ bắt đầu thấy khó thở nhẹ do tử cung đẩy cơ hoành lên cao. Hãy ngồi thẳng lưng và hít thở sâu."
-          },
-          31: {
-            title: "Xoay đầu chuẩn bị ngôi",
-            sizeComparison: "Bằng một quả dừa xiêm lớn",
-            weight: "~ 1.5 kg",
-            length: "~ 41.1 cm",
-            fruitIcon: "🥥",
-            fruitName: "Quả dừa xiêm lớn",
-            description: "Nhiều em bé bắt đầu xoay đầu xuống phía dưới tử cung (ngôi thuận) để chuẩn bị sẵn tư thế thuận lợi cho kỳ sinh nở sắp tới.",
-            babyMilestone: "Hệ xương khớp phát triển cứng cáp nhưng các xương sọ vẫn giữ cấu trúc mềm dẻo để dễ chui qua đường sinh.",
-            momCare: "Mẹ hãy bắt đầu học cách đếm cử động thai (thai máy) mỗi ngày sau bữa ăn để theo dõi sức khỏe của con."
-          },
-          32: {
-            title: "Da dẻ căng mịn hồng hào",
-            sizeComparison: "Bằng một quả dưa hấu vừa",
-            weight: "~ 1.7 kg",
-            length: "~ 42.4 cm",
-            fruitIcon: "🍉",
-            fruitName: "Quả dưa hấu vừa",
-            description: "Nhờ lớp mỡ dưới da tích tụ đầy đặn, làn da nhăn nheo của bé trước đây nay đã căng mịn, hồng hào và đáng yêu vô cùng.",
-            babyMilestone: "Hệ thần kinh, tiêu hóa và bài tiết của bé hoạt động cực kỳ trơn tru và phối hợp nhịp nhàng.",
-            momCare: "Khám thai đều đặn 2 tuần một lần từ mốc này. Hãy chuẩn bị dần giỏ đồ đi sinh (quần áo, bỉm sữa...)."
-          },
-          33: {
-            title: "Hệ miễn dịch thô sơ",
-            sizeComparison: "Bằng một quả dứa lớn",
-            weight: "~ 1.9 kg",
-            length: "~ 43.7 cm",
-            fruitIcon: "🍍",
-            fruitName: "Quả dứa lớn",
-            description: "Bé bắt đầu nhận được các kháng thể miễn dịch truyền từ máu mẹ qua nhau thai để tự bảo vệ cơ thể khỏi virus, vi khuẩn ngay khi chào đời.",
-            babyMilestone: "Hệ thống miễn dịch thô sơ tự thân của bé bắt đầu tự vận hành nhẹ.",
-            momCare: "Nên tắm nước ấm, ngâm chân nước ấm gừng muối trước khi ngủ để giảm sưng phù chân và chuột rút."
-          },
-          34: {
-            title: "Phổi tiếp tục hoàn thiện",
-            sizeComparison: "Bằng một quả dưa lưới lớn",
-            weight: "~ 2.15 kg",
-            length: "~ 45 cm",
-            fruitIcon: "🍈",
-            fruitName: "Quả dưa lưới lớn",
-            description: "Lớp màng bảo vệ da (gây) ngày một dày hơn. Hệ thống hô hấp và phổi đã hoàn thiện hầu như hoàn toàn.",
-            babyMilestone: "Bé đã có khả năng điều hòa hơi thở nhịp nhàng nếu sinh non ở tuần này mà không cần hỗ trợ máy thở quá nhiều.",
-            momCare: "Nếu mẹ thấy xuất hiện các cơn gò giả (Braxton Hicks) không đau và không đều, hãy ngồi nghỉ ngơi và uống một cốc nước ấm."
-          },
-          35: {
-            title: "Tăng tốc cân nặng",
-            sizeComparison: "Bằng một quả dưa hấu lớn",
-            weight: "~ 2.4 kg",
-            length: "~ 46.2 cm",
-            fruitIcon: "🍉",
-            fruitName: "Quả dưa hấu lớn",
-            description: "Bé tăng trọng lượng rất nhanh trong giai đoạn này (khoảng 200 - 250g mỗi tuần). Không gian tử cung đã quá chật để bé nhào lộn.",
-            babyMilestone: "Thận và gan của bé đã hoàn tất toàn bộ quá trình xử lý chất thải sinh học thô sơ.",
-            momCare: "Hãy hoàn thành hồ sơ sinh tại bệnh viện mẹ dự định sinh nở."
-          },
-          36: {
-            title: "Chuẩn bị tụt xuống khung chậu",
-            sizeComparison: "Bằng một cây đu đủ lớn",
-            weight: "~ 2.6 kg",
-            length: "~ 47.4 cm",
-            fruitIcon: "🥬",
-            fruitName: "Cây đu đủ lớn",
-            description: "Bé cưng bắt đầu tụt dần xuống sâu dưới khung chậu của mẹ (hiện tượng sa bụng bầu). Mẹ sẽ thấy dễ thở hơn nhưng áp lực lên bàng quang tăng mạnh khiến buồn tiểu liên tục.",
-            babyMilestone: "Lông tơ và chất gây trên da bắt đầu bong ra, lẫn vào nước ối và được bé nuốt vào tạo thành phân su.",
-            momCare: "Khám thai 1 tuần/lần từ mốc này. Làm xét nghiệm liên cầu khuẩn nhóm B (GBS) để bảo vệ bé khi sinh thường."
-          },
-          37: {
-            title: "Thai nhi chính thức 'Đủ tháng'",
-            sizeComparison: "Bằng một quả mít vừa",
-            weight: "~ 2.85 kg",
-            length: "~ 48.6 cm",
-            fruitIcon: "🍈",
-            fruitName: "Quả mít vừa",
-            description: "Chúc mừng mẹ! Từ tuần này, em bé được coi là đã phát triển đủ tháng (Early Term). Bé đã hoàn toàn sẵn sàng cho cuộc sống bên ngoài tử cung.",
-            babyMilestone: "Hệ thống phổi đã tự sản xuất hoàn toàn đủ chất diện hoạt để tự thở không khí ngoài trời.",
-            momCare: "Theo dõi sát sao các dấu hiệu chuyển dạ thực sự: rỉ ối, vỡ ối, ra dịch hồng âm đạo hoặc gò tử cung đau đều đặn."
-          },
-          38: {
-            title: "Tiêu thụ chất béo",
-            sizeComparison: "Bằng một quả mít lớn",
-            weight: "~ 3.1 kg",
-            length: "~ 49.8 cm",
-            fruitIcon: "🍈",
-            fruitName: "Quả mít lớn",
-            description: "Các lớp mỡ tiếp tục được tích lũy để giúp bé duy trì thân nhiệt. Vòng đầu của bé hiện tại có kích thước gần tương đương với vòng bụng.",
-            babyMilestone: "Phản xạ cầm nắm của bé cực kỳ mạnh mẽ, hai tay đã có thể nắm chặt.",
-            momCare: "Chu chuẩn bị sẵn sàng tinh thần, kiểm tra lại giấy tờ tùy thân, bảo hiểm và số điện thoại của bác sĩ/bệnh viện."
-          },
-          39: {
-            title: "Sẵn sàng chào đời",
-            sizeComparison: "Bằng một quả dưa hấu khổng lồ",
-            weight: "~ 3.3 kg",
-            length: "~ 50.7 cm",
-            fruitIcon: "🍉",
-            fruitName: "Dưa hấu khổng lồ",
-            description: "Bé cưng đã tích lũy đủ cân nặng tiêu chuẩn (3.0 - 3.4 kg). Mọi cơ quan nội tạng đã ở trạng thái tối ưu nhất chờ ngày chào đời.",
-            babyMilestone: "Lớp da bên ngoài liên tục được tái tạo tế bào mới khỏe mạnh.",
-            momCare: "Mẹ có thể đi bộ nhẹ nhàng quanh nhà để giúp cổ tử cung mở thuận lợi hơn."
-          },
-          40: {
-            title: "Ngày dự sinh hạnh phúc",
-            sizeComparison: "Kích thước hoàn hảo của em bé sơ sinh",
-            weight: "3.2 - 3.5 kg",
-            length: "50 - 52 cm",
-            fruitIcon: "👶",
-            fruitName: "Em bé sơ sinh hoàn chỉnh",
-            description: "Mốc 40 tuần thai kỳ viên mãn. Bé yêu sẽ sớm cất tiếng khóc chào đời để ôm lấy mẹ. Hãy tự hào vì mẹ đã hoàn thành xuất sắc hành trình 280 ngày kỳ diệu!",
-            babyMilestone: "Bé cưng thức tỉnh, hệ tuần hoàn tự đóng các ống tim thai cũ để chuyển sang nhịp thở phổi hoàn chỉnh ngay khi chào đời.",
-            momCare: "Hãy thả lỏng tinh thần, hít thở đều đặn theo hướng dẫn của hộ sinh và bác sĩ. Mẹ sắp được gặp thiên thần nhỏ rồi!"
-          }
+          1: { title: "Chuẩn bị rụng trứng", sizeComparison: "Chưa có kích thước", weight: "~ 0 g", length: "~ 0 mm", fruitIcon: "🥚", fruitName: "Tế bào trứng chuẩn bị", description: "Cơ thể mẹ đang ở chu kỳ kinh nguyệt cuối cùng. Tử cung bắt đầu làm dày lớp niêm mạc giàu chất dinh dưỡng để sẵn sàng đón nhận trứng thụ tinh.", babyMilestone: "Trứng rụng và chuẩn bị gặp tinh trùng để tạo nên một mầm sống mới.", momCare: "Uống bổ sung Acid Folic ngay từ lúc này (400 mcg/ngày) để giảm 90% nguy cơ dị tật ống thần kinh sau này." },
+          2: { title: "Sự thụ thai kỳ diệu", sizeComparison: "Siêu nhỏ", weight: "~ 0 g", length: "~ 0.1 mm", fruitIcon: "✨", fruitName: "Hợp tử siêu nhỏ", description: "Sự thụ tinh xảy ra khi tinh trùng gặp trứng tại ống dẫn trứng tạo thành hợp tử. Giới tính và toàn bộ đặc điểm di truyền của bé đã được quyết định ngay tại giây phút này.", babyMilestone: "Hợp tử bắt đầu phân bào liên tục và di chuyển dần về phía tử cung.", momCare: "Giữ tinh thần thoải mái, tránh xa khói thuốc lá, rượu bia và các chất kích thích." },
+          3: { title: "Làm tổ trong tử cung", sizeComparison: "Kích thước bằng một hạt cát nhỏ", weight: "~ 0.1 g", length: "~ 0.15 mm", fruitIcon: "🥪", fruitName: "Hạt muối nhỏ", description: "Phôi dâu nay đã phát triển thành phôi nang và bám chặt vào lớp niêm mạc tử cung để làm tổ vững chắc.", babyMilestone: "Hình thành các lớp tế bào ban đầu: nội bì, trung bì và ngoại bì để sau này phát triển thành các cơ quan riêng biệt.", momCare: "Tránh các hoạt động thể chất quá mạnh hay mang vác vật nặng. Ăn các thực phẩm ấm, dễ tiêu." },
+          4: { title: "Mầm sống bén rễ", sizeComparison: "Bằng hạt anh túc (Poppy seed)", weight: "~ 0.2 g", length: "~ 0.36 mm", fruitIcon: "🍓", fruitName: "Hạt anh túc", description: "Phôi thai lúc này đã bám rễ sâu vào tử cung. Các mạch máu đầu tiên liên kết mẹ và bé bắt đầu hình thành.", babyMilestone: "Sự hình thành nhau thai sơ khai bắt đầu sản sinh hormone hCG (khiến que thử thai lên 2 vạch).", momCare: "Mẹ có thể dùng que thử thai để kiểm tra. Hãy hẹn lịch khám với bác sĩ sản khoa lần đầu tiên." },
+          5: { title: "Ống thần kinh đóng lại", sizeComparison: "Bằng hạt táo nhỏ", weight: "~ 0.4 g", length: "~ 1.25 mm", fruitIcon: "🍎", fruitName: "Hạt táo", description: "Ống thần kinh của bé (sẽ phát triển thành não bộ và tủy sống) chính thức đóng lại trong tuần này.", babyMilestone: "Tim thai thô sơ bắt đầu đập những nhịp đầu tiên, hệ tuần hoàn thô sơ bắt đầu hoạt động.", momCare: "Duy trì uống Acid Folic và Sắt đều đặn. Nếu bắt đầu nghén, hãy uống trà gừng ấm để làm dịu dạ dày." },
+          6: { title: "Tim thai đập rộn ràng", sizeComparison: "Bằng một hạt đậu xanh", weight: "~ 0.8 g", length: "~ 4 mm", fruitIcon: "🥦", fruitName: "Hạt đậu xanh", description: "Tim của bé hiện tại đập khoảng 100 - 150 nhịp/phút (nhanh gấp đôi người lớn). Các chồi tay và chân bắt đầu nhú ra.", babyMilestone: "Mũi, miệng và tai của bé bắt đầu định hình rõ rệt trên siêu âm độ phân giải cao.", momCare: "Tránh tự ý uống bất kỳ loại thuốc nào mà chưa có sự đồng ý của bác sĩ sản khoa." },
+          7: { title: "Chồi tay chân phát triển", sizeComparison: "Bằng một quả việt quất", weight: "~ 1 g", length: "~ 8 mm", fruitIcon: "🫐", fruitName: "Quả việt quất", description: "Não bộ phát triển thần tốc, sản sinh ra hàng trăm ngàn tế bào thần kinh mới mỗi phút. Các chồi chi dài ra rõ rệt.", babyMilestone: "Ống dẫn thở bắt đầu nối dài từ cổ họng đến lá phổi sơ khai của bé.", momCare: "Nên ăn nhiều bữa nhỏ để đối phó với chứng buồn nôn. Hãy chuẩn bị sẵn bánh quy lạt bên giường." },
+          8: { title: "Hình thành ngón tay, ngón chân", sizeComparison: "Bằng một quả mâm xôi", weight: "~ 1.5 g", length: "~ 1.6 cm", fruitIcon: "🍒", fruitName: "Quả mâm xôi", description: "Các ngón tay và chân nhỏ xíu có màng đang hình thành. Bé bắt đầu có những cử động tự phát nhưng mẹ chưa thể cảm nhận được.", babyMilestone: "Hệ xương khớp bắt đầu quá trình sụn hóa. Đuôi phôi thai nhỏ dần và chuẩn bị biến mất.", momCare: "Cần bổ sung thêm thực phẩm dồi dào canxi từ sữa tiệt trùng, phô mai để hỗ trợ hình thành sụn xương." },
+          9: { title: "Bé chính thức là 'Thai nhi'", sizeComparison: "Bằng một quả nho lớn", weight: "~ 2 g", length: "~ 2.3 cm", fruitIcon: "🍇", fruitName: "Quả nho lớn", description: "Đuôi phôi thai đã hoàn toàn biến mất. Giai đoạn phôi kết thúc, em bé chính thức được gọi y học là 'Thai nhi'.", babyMilestone: "Nhịp tim thai đạt đỉnh khoảng 170 nhịp/phút. Các cơ quan nội tạng quan trọng bắt đầu tự định vị trí.", momCare: "Uống nhiều nước ấm (2 lít mỗi ngày). Hạn chế tối đa đồ ăn dầu mỡ gây khó tiêu, trào ngược dạ dày." },
+          10: { title: "Các khớp hoạt động", sizeComparison: "Bằng quả quất (tắc) chín", weight: "~ 4 g", length: "~ 3.1 cm", fruitIcon: "🍊", fruitName: "Quả quất chín", description: "Xương sườn và xương sống của bé đang định hình rõ nét. Các khớp khuỷu tay và đầu gối đã có thể gập mở.", babyMilestone: "Móng tay và móng chân siêu nhỏ bắt đầu xuất hiện dưới lớp da mỏng manh.", momCare: "Mẹ hãy đi xét nghiệm công thức máu toàn phần nếu chưa thực hiện để phát hiện sớm tình trạng thiếu máu." },
+          11: { title: "Phản xạ ban đầu", sizeComparison: "Bằng một quả sung ngọt", weight: "~ 7 g", length: "~ 4.1 cm", fruitIcon: "🍍", fruitName: "Quả sung ngọt", description: "Bé đã có thể mở và khép bàn tay nhỏ bé của mình. Hệ tiêu hóa (ruột) bắt đầu di chuyển từ dây rốn về khoang bụng.", babyMilestone: "Bé bắt đầu tập nuốt nước ối và thận bắt đầu lọc, bài tiết nước tiểu thô sơ ra môi trường ối.", momCare: "Thích hợp nhất để làm xét nghiệm sàng lọc không xâm lấn NIPT hoặc Double Test (Tuần 11 - 13) để phát hiện dị tật nhiễm sắc thể." },
+          12: { title: "Hoàn thiện cấu trúc sơ bộ", sizeComparison: "Bằng một quả chanh ta", weight: "~ 14 g", length: "~ 5.4 cm", fruitIcon: "🍋", fruitName: "Quả chanh ta", description: "Gần như toàn bộ hệ thống cơ quan của bé đã phát triển hoàn chỉnh cấu trúc cơ bản. Nguy cơ sảy thai tự nhiên giảm mạnh.", babyMilestone: "Hệ thống thần kinh phản xạ phát triển mạnh, bé sẽ giật mình nhẹ nếu mẹ ấn nhẹ vào bụng.", momCare: "Đây là mốc đo độ mờ da gáy cực kỳ quan trọng bằng siêu âm để tầm soát hội chứng Down." },
+          13: { title: "Vân tay xuất hiện", sizeComparison: "Bằng một quả chanh leo", weight: "~ 23 g", length: "~ 7.4 cm", fruitIcon: "🥔", fruitName: "Quả chanh leo", description: "Tuần cuối cùng của Tam cá nguyệt thứ 1. Dấu vân tay độc nhất vô nhị của bé đã hình thành trên các đầu ngón tay.", babyMilestone: "Nhau thai đã phát triển toàn diện và tiếp quản hoàn toàn nhiệm vụ cung cấp oxy và dưỡng chất từ mẹ sang bé.", momCare: "Chúc mừng mẹ đã vượt qua chặng đường nhạy cảm nhất! Cơn nghén sẽ giảm dần từ tuần tới, mẹ có thể bắt đầu ăn ngon miệng hơn." },
+          14: { title: "Bắt đầu Tam cá nguyệt 2", sizeComparison: "Bằng một quả chanh vàng lớn", weight: "~ 43 g", length: "~ 8.7 cm", fruitIcon: "🍋", fruitName: "Quả chanh vàng", description: "Bé bắt đầu biết nheo mắt, nhăn mặt và có thể mút ngón tay cái của mình. Thận hoạt động đều đặn để bài tiết nước ối.", babyMilestone: "Lông tơ mịn (lanugo) bắt đầu mọc khắp cơ thể để giữ ấm và bảo vệ làn da mỏng dưới nước ối.", momCare: "Nhu cầu canxi của bé bắt đầu tăng cao. Hãy ăn nhiều thực phẩm giàu canxi và bổ sung viên uống theo chỉ định." },
+          15: { title: "Xương bắt đầu cứng cáp", sizeComparison: "Bằng một quả táo ta lớn", weight: "~ 70 g", length: "~ 10 cm", fruitIcon: "🍎", fruitName: "Quả táo ta", description: "Khung xương của bé bắt đầu chuyển hóa từ sụn dẻo thành xương cứng (quá trình cốt hóa). Da của bé lúc này vẫn còn rất mỏng, nhìn rõ các mạch máu bên dưới.", babyMilestone: "Bé bắt đầu thực hiện các động tác hít thở nước ối để luyện cơ phổi nở ra.", momCare: "Nếu thấy nướu (lợi) dễ bị chảy máu khi đánh răng, hãy dùng bàn chải lông mềm và khám nha khoa định kỳ." },
+          16: { title: "Cảm nhận ánh sáng", sizeComparison: "Bằng một quả bơ nhỏ", weight: "~ 100 g", length: "~ 11.6 cm", fruitIcon: "🥑", fruitName: "Quả bơ nhỏ", description: "Mắt của bé mặc dù vẫn nhắm chặt nhưng đã bắt đầu nhạy cảm với ánh sáng mạnh rọi qua thành bụng của mẹ.", babyMilestone: "Đầu của bé đã đứng thẳng hơn so với cơ thể, tai di chuyển về đúng vị trí hai bên đầu.", momCare: "Thích hợp làm xét nghiệm Triple Test (Tuần 15 - 18) nếu trước đó mẹ chưa làm Double Test hay NIPT." },
+          17: { title: "Tích lũy mỡ nâu", sizeComparison: "Bằng một quả lựu", weight: "~ 140 g", length: "~ 13 cm", fruitIcon: "🧅", fruitName: "Quả lựu", description: "Một lớp mỡ đặc biệt (mỡ nâu) bắt đầu tích tụ dưới da của bé, đóng vai trò giữ ấm cơ thể ngay sau khi bé chào đời.", babyMilestone: "Hệ tuần hoàn phát triển mạnh mẽ, tim bé bơm khoảng 25 lít máu mỗi ngày đi khắp cơ thể nhỏ bé.", momCare: "Tránh nằm ngửa khi ngủ. Nên bắt đầu nằm nghiêng sang bên trái để tối ưu dòng máu truyền qua nhau thai." },
+          18: { title: "Bé nghe thấy tiếng mẹ", sizeComparison: "Bằng quả ớt chuông lớn", weight: "~ 190 g", length: "~ 14.2 cm", fruitIcon: "🫑", fruitName: "Quả ớt chuông", description: "Các xương nhỏ trong tai trong đã phát triển hoàn thiện giúp bé bắt đầu nghe thấy âm thanh từ thế giới bên ngoài rõ nét.", babyMilestone: "Bé có thể giật mình hoặc đạp mạnh hơn khi nghe thấy tiếng động lớn đột ngột ngoài môi trường.", momCare: "Bắt đầu trò chuyện, đọc sách hoặc cho bé nghe những giai điệu nhạc êm dịu. Đây là phương pháp thai giáo âm thanh tuyệt vời." },
+          19: { title: "Lớp màng bảo vệ da", sizeComparison: "Bằng quả cà chua lớn", weight: "~ 240 g", length: "~ 15.3 cm", fruitIcon: "🍅", fruitName: "Quả cà chua lớn", description: "Lớp chất gây (vernix caseosa) màu trắng, trơn bóng bao phủ khắp làn da bé để bảo vệ da không bị trầy xước hay nhăn nheo trong nước ối.", babyMilestone: "Các tế bào thần kinh chuyên biệt cho từng giác quan (khứu giác, vị giác, thị giác, thính giác) phát triển chuyên sâu.", momCare: "Cảm giác thèm ăn tăng mạnh. Hãy kiểm soát chất lượng đồ ăn, ưu tiên protein và chất xơ hơn là tinh bột ngọt." },
+          20: { title: "Cột mốc nửa chặng đường", sizeComparison: "Bằng một quả chuối tiêu lớn", weight: "~ 300 g", length: "~ 25.6 cm (Đo từ đầu đến chân)", fruitIcon: "🍌", fruitName: "Quả chuối tiêu", description: "Mẹ đã đi được một nửa hành trình mang thai! Tử cung của mẹ lúc này đã phát triển cao ngang rốn.", babyMilestone: "Mẹ bắt đầu cảm nhận rất rõ các cú máy, đạp, nhào lộn tinh nghịch đầu tiên của bé (thai máy).", momCare: "Thời điểm vàng để thực hiện Siêu âm hình thái học 4D (Tuần 20 - 24) để rà soát toàn bộ cấu trúc cơ thể bé." },
+          21: { title: "Nuốt nước ối đều đặn", sizeComparison: "Bằng một củ cà rốt lớn", weight: "~ 360 g", length: "~ 26.7 cm", fruitIcon: "🥕", fruitName: "Củ cà rốt lớn", description: "Hệ tiêu hóa của bé tiếp tục hoàn thiện thông qua việc nuốt nước ối thường xuyên. Phân su màu xanh đen bắt đầu tích tụ trong ruột bé.", babyMilestone: "Bé bắt đầu có chu kỳ ngủ và thức rõ ràng. Khi bé thức sẽ chuyển động nhiều hơn.", momCare: "Tăng cường uống nước lọc ấm và ăn nhiều rau xanh để phòng ngừa trĩ và táo bón thai kỳ đang gia tăng." },
+          22: { title: "Vị giác hình thành", sizeComparison: "Bằng một quả đu đủ nhỏ", weight: "~ 430 g", length: "~ 27.8 cm", fruitIcon: "🥭", fruitName: "Quả đu đủ nhỏ", description: "Các gai vị giác trên lưỡi của bé đã hình thành đầy đủ. Bé có thể cảm nhận được mùi vị của nước ối (vốn thay đổi theo món ăn của mẹ).", babyMilestone: "Lông mày và mí mắt đã hoàn toàn định hình xong.", momCare: "Mẹ ăn đa dạng các món ăn lành mạnh để bé làm quen với nhiều hương vị khác nhau ngay từ trong bụng mẹ." },
+          23: { title: "Sản sinh chất diện hoạt", sizeComparison: "Bằng một quả bưởi nhỏ", weight: "~ 500 g", length: "~ 28.9 cm", fruitIcon: "🍊", fruitName: "Quả bưởi nhỏ", description: "Phổi của bé bắt đầu sản sinh ra chất diện hoạt (surfactant) - chất giúp các túi phổi không bị xẹp lại khi bé hít thở không khí sau này.", babyMilestone: "Da bé chuyển sang màu đỏ hồng do các mạch máu li ti dưới da phát triển mạnh mẽ.", momCare: "Khi đi xe máy hoặc ô tô, mẹ lưu ý thắt dây an toàn vòng xuống dưới bụng bầu để tránh lực ép vào tử cung." },
+          24: { title: "Cột mốc sống sót tối thiểu", sizeComparison: "Bằng một bắp ngô ngọt lớn", weight: "~ 600 g", length: "~ 30 cm", fruitIcon: "🌽", fruitName: "Bắp ngô ngọt", description: "Mốc phát triển y học tối thiểu. Nếu chẳng may sinh non ở tuần này, em bé đã có cơ hội sống sót nếu được chăm sóc y tế tích cực.", babyMilestone: "Các phế nang phổi bắt đầu hình thành liên tục giúp hệ hô hấp chuẩn bị hoạt động độc lập.", momCare: "Giai đoạn quan trọng để làm xét nghiệm dung nạp đường huyết (Tuần 24 - 28) để tầm soát tiểu đường thai kỳ." },
+          25: { title: "Bé bắt đầu mở mắt", sizeComparison: "Bằng một quả súp lơ xanh", weight: "~ 660 g", length: "~ 34.6 cm", fruitIcon: "🥦", fruitName: "Quả súp lơ xanh", description: "Mắt của bé bắt đầu hé mở và có thể chớp mắt thường xuyên. Cấu trúc cột sống cứng cáp hơn để nâng đỡ cơ thể bé.", babyMilestone: "Hệ thống mạch máu trong phổi phát triển vượt bậc để chuẩn bị cho nhịp thở đầu đời.", momCare: "Nếu mẹ thấy tay chân bị tê bì hoặc đau lưng nhiều, hãy thử tập các bài yoga bầu nhẹ nhàng hoặc massage chuyên biệt." },
+          26: { title: "Sóng nano hoạt động mạnh", sizeComparison: "Bằng một quả dưa hấu tí hon", weight: "~ 760 g", length: "~ 35.6 cm", fruitIcon: "🍉", fruitName: "Dưa hấu tí hon", description: "Các dây thần kinh trong tai phát triển hoàn chỉnh hơn giúp bé nhạy cảm và phản ứng linh hoạt với giọng nói của cả bố và mẹ.", babyMilestone: "Sóng não của bé bắt đầu hoạt động mạnh mẽ, ghi nhận hệ thống phản xạ thần kinh ngày một tinh vi.", momCare: "Bố hãy tích cực trò chuyện áp tai vào bụng mẹ để bé quen giọng nói trầm ấm của bố." },
+          27: { title: "Kết thúc Tam cá nguyệt 2", sizeComparison: "Bằng một cây cải bắp lớn", weight: "~ 875 g", length: "~ 36.6 cm", fruitIcon: "🥬", fruitName: "Cải bắp lớn", description: "Tuần cuối cùng của tam cá nguyệt thứ 2. Phổi, gan và hệ thống miễn dịch của bé tiếp tục hoàn thiện các bước cuối.", babyMilestone: "Bé bắt đầu xuất hiện những nhịp nấc cụt thường xuyên do tập hít thở nước ối (mẹ cảm nhận như những nhịp giật nhẹ đều đặn).", momCare: "Mẹ nên đo huyết áp thường xuyên để phát hiện sớm nguy cơ tiền sản giật (nếu có)." },
+          28: { title: "Bắt đầu Tam cá nguyệt 3", sizeComparison: "Bằng một quả dừa", weight: "~ 1 kg", length: "~ 37.6 cm", fruitIcon: "🥥", fruitName: "Quả dừa", description: "Chào mừng mẹ đến với 3 tháng cuối! Bé cưng lúc này đã nặng khoảng 1 kg. Mắt bé có thể nhắm mở và nhìn xung quanh linh hoạt.", babyMilestone: "Lớp lông tơ bắt đầu rụng dần, mỡ dưới da tiếp tục tích tụ nhanh chóng.", momCare: "Cần tăng cường uống viên Sắt và Canxi đầy đủ vì đây là lúc bé hút dưỡng chất từ mẹ mạnh mẽ nhất để bứt phá cân nặng." },
+          29: { title: "Não bộ phát triển bùng nổ", sizeComparison: "Bằng một quả bí ngô nhỏ", weight: "~ 1.15 kg", length: "~ 38.6 cm", fruitIcon: "🎃", fruitName: "Quả bí ngô nhỏ", description: "Bộ não phát triển rất nhanh, bắt đầu xuất hiện các nếp nhăn và rãnh não sâu để tăng diện tích chứa tế bào thần kinh.", babyMilestone: "Bé đã có thể tự điều hòa thân nhiệt ở mức ổn định nhờ sự phát triển của hệ thần kinh trung ương.", momCare: "Bổ sung lượng DHA dồi dào từ cá hồi, trứng và quả óc chó để hỗ trợ quá trình hình thành não bộ của con yêu." },
+          30: { title: "Không gian chật chội", sizeComparison: "Bằng một bắp cải thảo lớn", weight: "~ 1.3 kg", length: "~ 39.9 cm", fruitIcon: "🥬", fruitName: "Bắp cải thảo lớn", description: "Bé đã chiếm phần lớn không gian trong tử cung của mẹ. Lượng nước ối bắt đầu giảm dần nhường chỗ cho em bé lớn lên.", babyMilestone: "Tủy xương đã tiếp quản hoàn toàn nhiệm vụ sản xuất hồng cầu thay cho lá gan và lá lách.", momCare: "Mẹ bắt đầu thấy khó thở nhẹ do tử cung đẩy cơ hoành lên cao. Hãy ngồi thẳng lưng và hít thở sâu." },
+          31: { title: "Xoay đầu chuẩn bị ngôi", sizeComparison: "Bằng một quả dừa xiêm lớn", weight: "~ 1.5 kg", length: "~ 41.1 cm", fruitIcon: "🥥", fruitName: "Quả dừa xiêm lớn", description: "Nhiều em bé bắt đầu xoay đầu xuống phía dưới tử cung (ngôi thuận) để chuẩn bị sẵn tư thế thuận lợi cho kỳ sinh nở sắp tới.", babyMilestone: "Hệ xương khớp phát triển cứng cáp nhưng các xương sọ vẫn giữ cấu trúc mềm dẻo để dễ chui qua đường sinh.", momCare: "Mẹ hãy bắt đầu học cách đếm cử động thai (thai máy) mỗi ngày sau bữa ăn để theo dõi sức khỏe của con." },
+          32: { title: "Da dẻ căng mịn hồng hào", sizeComparison: "Bằng một quả dưa hấu vừa", weight: "~ 1.7 kg", length: "~ 42.4 cm", fruitIcon: "🍉", fruitName: "Quả dưa hấu vừa", description: "Nhờ lớp mỡ dưới da tích tụ đầy đặn, làn da nhăn nheo của bé trước đây nay đã căng mịn, hồng hào và đáng yêu vô cùng.", babyMilestone: "Hệ thần kinh, tiêu hóa và bài tiết của bé hoạt động cực kỳ trơn tru và phối hợp nhịp nhàng.", momCare: "Khám thai đều đặn 2 tuần một lần từ mốc này. Hãy chuẩn bị dần giỏ đồ đi sinh (quần áo, bỉm sữa...)." },
+          33: { title: "Hệ miễn dịch thô sơ", sizeComparison: "Bằng một quả dứa lớn", weight: "~ 1.9 kg", length: "~ 43.7 cm", fruitIcon: "🍍", fruitName: "Quả dứa lớn", description: "Bé bắt đầu nhận được các kháng thể miễn dịch truyền từ máu mẹ qua nhau thai để tự bảo vệ cơ thể khỏi virus, vi khuẩn ngay khi chào đời.", babyMilestone: "Hệ thống miễn dịch thô sơ tự thân của bé bắt đầu tự vận hành nhẹ.", momCare: "Nên tắm nước ấm, ngâm chân nước ấm gừng muối trước khi ngủ để giảm sưng phù chân và chuột rút." },
+          34: { title: "Phổi tiếp tục hoàn thiện", sizeComparison: "Bằng một quả dưa lưới lớn", weight: "~ 2.15 kg", length: "~ 45 cm", fruitIcon: "🍈", fruitName: "Quả dưa lưới lớn", description: "Lớp màng bảo vệ da (gây) ngày một dày hơn. Hệ thống hô hấp và phổi đã hoàn thiện hầu như hoàn toàn.", babyMilestone: "Bé đã có khả năng điều hòa hơi thở nhịp nhàng nếu sinh non ở tuần này mà không cần hỗ trợ máy thở quá nhiều.", momCare: "Nếu mẹ thấy xuất hiện các cơn gò giả (Braxton Hicks) không đau và không đều, hãy ngồi nghỉ ngơi và uống một cốc nước ấm." },
+          35: { title: "Tăng tốc cân nặng", sizeComparison: "Bằng một quả dưa hấu lớn", weight: "~ 2.4 kg", length: "~ 46.2 cm", fruitIcon: "🍉", fruitName: "Quả dưa hấu lớn", description: "Bé tăng trọng lượng rất nhanh trong giai đoạn này (khoảng 200 - 250g mỗi tuần). Không gian tử cung đã quá chật để bé nhào lộn.", babyMilestone: "Thận và gan của bé đã hoàn tất toàn bộ quá trình xử lý chất thải sinh học thô sơ.", momCare: "Hãy hoàn thành hồ sơ sinh tại bệnh viện mẹ dự định sinh nở." },
+          36: { title: "Chuẩn bị tụt xuống khung chậu", sizeComparison: "Bằng một cây đu đủ lớn", weight: "~ 2.6 kg", length: "~ 47.4 cm", fruitIcon: "🥬", fruitName: "Cây đu đủ lớn", description: "Bé cưng bắt đầu tụt dần xuống sâu dưới khung chậu của mẹ (hiện tượng sa bụng bầu). Mẹ sẽ thấy dễ thở hơn nhưng áp lực lên bàng quang tăng mạnh khiến buồn tiểu liên tục.", babyMilestone: "Lông tơ và chất gây trên da bắt đầu bong ra, lẫn vào nước ối và được bé nuốt vào tạo thành phân su.", momCare: "Khám thai 1 tuần/lần từ mốc này. Làm xét nghiệm liên cầu khuẩn nhóm B (GBS) để bảo vệ bé khi sinh thường." },
+          37: { title: "Thai nhi chính thức 'Đủ tháng'", sizeComparison: "Bằng một quả mít vừa", weight: "~ 2.85 kg", length: "~ 48.6 cm", fruitIcon: "🍈", fruitName: "Quả mít vừa", description: "Chúc mừng mẹ! Từ tuần này, em bé được coi là đã phát triển đủ tháng (Early Term). Bé đã hoàn toàn sẵn sàng cho cuộc sống bên ngoài tử cung.", babyMilestone: "Hệ thống phổi đã tự sản xuất hoàn toàn đủ chất diện hoạt để tự thở không khí ngoài trời.", momCare: "Theo dõi sát sao các dấu hiệu chuyển dạ thực sự: rỉ ối, vỡ ối, ra dịch hồng âm đạo hoặc gò tử cung đau đều đặn." },
+          38: { title: "Tiêu thụ chất béo", sizeComparison: "Bằng một quả mít lớn", weight: "~ 3.1 kg", length: "~ 49.8 cm", fruitIcon: "🍈", fruitName: "Quả mít lớn", description: "Các lớp mỡ tiếp tục được tích lũy để giúp bé duy trì thân nhiệt. Vòng đầu của bé hiện tại có kích thước gần tương đương với vòng bụng.", babyMilestone: "Phản xạ cầm nắm của bé cực kỳ mạnh mẽ, hai tay đã có thể nắm chặt.", momCare: "Chuẩn bị sẵn sàng tinh thần, kiểm tra lại giấy tờ tùy thân, bảo hiểm và số điện thoại của bác sĩ/bệnh viện." },
+          39: { title: "Sẵn sàng chào đời", sizeComparison: "Bằng một quả dưa hấu khổng lồ", weight: "~ 3.3 kg", length: "~ 50.7 cm", fruitIcon: "🍉", fruitName: "Dưa hấu khổng lồ", description: "Bé cưng đã tích lũy đủ cân nặng tiêu chuẩn (3.0 - 3.4 kg). Mọi cơ quan nội tạng đã ở trạng thái tối ưu nhất chờ ngày chào đời.", babyMilestone: "Lớp da bên ngoài liên tục được tái tạo tế bào mới khỏe mạnh.", momCare: "Mẹ có thể đi bộ nhẹ nhàng quanh nhà để giúp cổ tử cung mở thuận lợi hơn." },
+          40: { title: "Ngày dự sinh hạnh phúc", sizeComparison: "Kích thước hoàn hảo của em bé sơ sinh", weight: "3.2 - 3.5 kg", length: "50 - 52 cm", fruitIcon: "👶", fruitName: "Em bé sơ sinh hoàn chỉnh", description: "Mốc 40 tuần thai kỳ viên mãn. Bé yêu sẽ sớm cất tiếng khóc chào đời để ôm lấy mẹ. Hãy tự hào vì mẹ đã hoàn thành xuất sắc hành trình 280 ngày kỳ diệu!", babyMilestone: "Bé cưng thức tỉnh, hệ tuần hoàn tự đóng các ống tim thai cũ để chuyển sang nhịp thở phổi hoàn chỉnh ngay khi chào đời.", momCare: "Hãy thả lỏng tinh thần, hít thở đều đặn theo hướng dẫn của hộ sinh và bác sĩ. Mẹ sắp được gặp thiên thần nhỏ rồi!" }
         };
 
-        // --- DATA: MENUS FOR 3 TRIMESTERS ---
+        // --- DATABASE: MENUS FOR 3 TRIMESTERS ---
         const TRIDATA = {
           1: {
-            name: "Tam Cá Nguyệt 1 (Tuần 1 - 13)",
-            subtitle: "Xây dựng nền móng & Chống nghén hiệu quả",
-            color: "emerald",
-            bgClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
-            accentBg: "bg-emerald-600",
-            hoverBg: "hover:bg-emerald-700",
-            activeTab: "bg-emerald-100 text-emerald-800 border-emerald-300",
+            name: "Tam Cá Nguyệt 1 (Tuần 1 - 13)", subtitle: "Xây dựng nền móng & Chống nghén hiệu quả", color: "emerald", bgClass: "bg-emerald-50 text-emerald-700 border-emerald-200", accentBg: "bg-emerald-600", hoverBg: "hover:bg-emerald-700", activeTab: "bg-emerald-100 text-emerald-800 border-emerald-300",
             keyNutrients: [
               { name: "Acid Folic", target: "400 - 600 µg/ngày", role: "Phòng ngừa dị tật ống thần kinh thai nhi." },
               { name: "Sắt", target: "30 mg/ngày", role: "Tăng tạo máu để nuôi dưỡng phôi thai." },
@@ -550,7 +145,7 @@
                 { meal: "Bữa phụ sáng (9:30)", main: "1 quả cam tươi + 1 nắm hạt điều (30g)", alt: "1 quả táo xanh + hạt hạnh nhân", note: "Bổ sung Vitamin C giúp hấp thụ sắt tối ưu." },
                 { meal: "Bữa trưa (12:00)", main: "Cơm gạo lứt + Thịt heo kho gừng + Canh rau cải bẹ xanh nấu thịt bằm", alt: "Cơm trắng + Gà kho gừng nhẹ + Canh mồng tơi", note: "Gừng hỗ trợ giảm nghén; rau cải xanh chứa dồi dào folate tự nhiên." },
                 { meal: "Bữa phụ chiều (15:00)", main: "Sữa chua ít đường + Hạt chia", alt: "Sữa tươi tiệt trùng + Bánh quy lạt", note: "Bổ sung lợi khuẩn đường ruột, giảm táo bón thai kỳ đầu." },
-                { meal: "Bữa tối (18:30)", main: "Cơm + Đậu hũ nhồi thịt hấp + Canh rau ngót nấu mọc (chỉ dùng rau chín kỹ)", alt: "Cơm + Trứng đúc thịt + Canh mướp hương", note: "Hạn chế đồ chiên xào nhiều dầu mỡ vào buổi tối để tránh đầy bụng." },
+                { meal: "Bữa tối (18:30)", main: "Cơm + Đậu hũ nhồi thịt hấp + Canh rau ngót nấu mọc", alt: "Cơm + Trứng đúc thịt + Canh mướp hương", note: "Hạn chế đồ chiên xào nhiều dầu mỡ vào buổi tối để tránh đầy bụng." },
                 { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa ấm tiệt trùng", alt: "Nước ấm mật ong gừng nhẹ", note: "Giúp ngủ ngon hơn, hạn chế đói nửa đêm gây buồn nôn sáng hôm sau." }
               ],
               "Thứ 3": [
@@ -604,13 +199,7 @@
             }
           },
           2: {
-            name: "Tam Cá Nguyệt 2 (Tuần 14 - 27)",
-            subtitle: "Phát triển khung xương & Tăng trưởng thần tốc",
-            color: "pink",
-            bgClass: "bg-pink-50 text-pink-700 border-pink-200",
-            accentBg: "bg-pink-600",
-            hoverBg: "hover:bg-pink-700",
-            activeTab: "bg-pink-100 text-pink-800 border-pink-300",
+            name: "Tam Cá Nguyệt 2 (Tuần 14 - 27)", subtitle: "Phát triển khung xương & Tăng trưởng thần tốc", color: "pink", bgClass: "bg-pink-50 text-pink-700 border-pink-200", accentBg: "bg-pink-600", hoverBg: "hover:bg-pink-700", activeTab: "bg-pink-100 text-pink-800 border-pink-300",
             keyNutrients: [
               { name: "Canxi", target: "1000 - 1200 mg/ngày", role: "Hình thành và phát triển hệ xương, răng của bé; tránh loãng xương cho mẹ." },
               { name: "Sắt & Vitamin C", target: "30 mg Sắt/ngày", role: "Tăng thể tích máu thêm 50% để nuôi thai." },
@@ -648,7 +237,7 @@
                 { meal: "Bữa trưa (12:00)", main: "Cơm + Cá hồi kho tộ + Canh bắp cải nấu thịt băm + Salad dưa chuột", alt: "Cơm + Sườn rim + Canh cải xoong", note: "Cá hồi cung cấp Omega-3 (DHA/EPA) cho sự phát triển não bộ." },
                 { meal: "Bữa phụ chiều (15:00)", main: "Khoai lang hấp chín + 1 ly sữa hạt sen", alt: "Bánh bông lan trứng muối ngọt nhẹ", note: "Khoai lang hỗ trợ hệ tiêu hóa của mẹ hoạt động trơn tru." },
                 { meal: "Bữa tối (18:30)", main: "Cơm + Đậu hũ nhồi thịt rán sốt cà + Canh cua nấu rau dền", alt: "Cơm + Bò sốt tiêu đen + Canh súp lơ", note: "Cua nấu rau dền đỏ tạo màu sắc ngon mắt và bổ sung canxi tối đa." },
-                { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa bầu ấm + 2 quả óc chó", alt: "Sữa tươi ấm", note: "Chu lẩm dưỡng chất đầy đủ cho em bé hấp thu qua đêm." }
+                { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa bầu ấm + 2 quả óc chó", alt: "Sữa tươi ấm", note: "Chuẩn bị dưỡng chất đầy đủ cho em bé hấp thu qua đêm." }
               ],
               "Thứ 6": [
                 { meal: "Bữa sáng (7:00)", main: "Hủ tiếu mì sườn heo chín mềm", alt: "Bánh cuốn thịt nướng chín kỹ", note: "Nước dùng xương hầm cung cấp vị ngọt thanh dễ ăn." },
@@ -669,7 +258,7 @@
               "Chủ Nhật": [
                 { meal: "Bữa sáng (7:00)", main: "Bún bò Huế tái chín đầy đủ giò heo", alt: "Bánh mì bò kho", note: "Cung cấp năng lượng dồi dào bắt đầu ngày chủ nhật vui vẻ." },
                 { meal: "Bữa phụ sáng (9:30)", main: "1 đĩa dâu tây ngọt mát + hạnh nhân", alt: "Sinh tố việt quất sữa chua", note: "Dâu tây giàu chất chống oxy hóa bảo vệ nhau thai." },
-                { meal: "Bữa trưa (12:00)", main: "Cơm + Cá thu sốt cà chua thơm ngọt + Canh mướp đắng nhồi thịt", alt: "Cơm + Gà luộc + Canh khoai tây sườn", note: "Cá thu nhỏ giàu omega-3 lành mạnh cho trí não bé." },
+                { meal: "Bữa trưa (12:00)", main: "Cơm + Cá thu sốt cà chua thơm ngọt + Canh mướp đắng nhồi thịt", alt: "Cơm + Gà luộc + Canh khoai tây sườn", note: "Cá thu nhỏ giàu omega-3 lành mạnh cho trí脑 bé." },
                 { meal: "Bữa phụ chiều (15:00)", main: "1 ly sữa ngũ cốc yến mạch ấm", alt: "Khoai tây hấp lò vi sóng + bơ thực vật", note: "Cung cấp năng lượng sạch từ tinh bột phức tạp." },
                 { meal: "Bữa tối (18:30)", main: "Cơm + Gà hấp nấm + Canh rong biển thịt bò băm", alt: "Cơm + Mực nhồi thịt sốt cà + Canh cải thảo", note: "Canh rong biển dồi dào canxi, i-ốt và khoáng chất tự nhiên cực quý." },
                 { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa tươi tiệt trùng ấm + vài hạt óc chó", alt: "Sữa hạt điều sen", note: "Kích thích giấc ngủ sinh lý êm ái cho mẹ." }
@@ -677,13 +266,7 @@
             }
           },
           3: {
-            name: "Tam Cá Nguyệt 3 (Tuần 28 - 40)",
-            subtitle: "Tích lũy mỡ, hoàn thiện não bộ & Chuẩn bị sinh",
-            color: "amber",
-            bgClass: "bg-amber-50 text-amber-700 border-amber-200",
-            accentBg: "bg-amber-600",
-            hoverBg: "hover:bg-amber-700",
-            activeTab: "bg-amber-100 text-amber-800 border-amber-300",
+            name: "Tam Cá Nguyệt 3 (Tuần 28 - 40)", subtitle: "Tích lũy mỡ, hoàn thiện não bộ & Chuẩn bị sinh", color: "amber", bgClass: "bg-amber-50 text-amber-700 border-amber-200", accentBg: "bg-amber-600", hoverBg: "hover:bg-amber-700", activeTab: "bg-amber-100 text-amber-800 border-amber-300",
             keyNutrients: [
               { name: "DHA / EPA", target: "200 - 300 mg/ngày", role: "Đóng vai trò quyết định trong việc hình thành vỏ não và thị giác của bé." },
               { name: "Chất xơ & Nước", target: "28g Xơ + 2.5L Nước", role: "Ngừa táo bón nặng do áp lực tử cung đè nén lên trực tràng." },
@@ -697,7 +280,7 @@
                 { meal: "Bữa trưa (12:00)", main: "Cơm gạo lứt + Cá hồi áp chảo sốt bơ tỏi + Súp lơ luộc + Canh rong biển", alt: "Cơm + Tôm rim mặn + Canh cải cúc", note: "Cá hồi là nguồn cung cấp DHA tự nhiên tốt nhất cho trí não bé." },
                 { meal: "Bữa phụ chiều (15:00)", main: "1/2 quả bơ dầm sữa đặc ngọt nhẹ (hoặc sữa tươi)", alt: "Khoai lang mật nướng", note: "Quả bơ giàu chất béo tốt hỗ trợ hấp thu vitamin hòa tan trong mỡ." },
                 { meal: "Bữa tối (18:30)", main: "Cơm + Bò xào hành tây bông cải + Canh cải thảo nấu thịt bằm", alt: "Cơm + Thịt gà kho sả + Canh bí đỏ", note: "Hành tây và bông cải dồi dào kali ngăn ngừa hiện tượng phù chân." },
-                { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa ấm + bánh quy lạt nguyên cám", alt: "Trà hoa cúc mật ong ấm", note: "Tránh đói đêm khiến mẹ khó chịu, mất ngủ." }
+                { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa ấm + bánh quy lạt nguyên cám", alt: "Trà hoa cúc mật liên ấm", note: "Tránh đói đêm khiến mẹ khó chịu, mất ngủ." }
               ],
               "Thứ 3": [
                 { meal: "Bữa sáng (7:00)", main: "Cháo thịt bò băm nấu hạt sen", alt: "Súp hải sản thập cẩm nóng", note: "Hạt sen an thần giúp mẹ giảm bớt lo âu giai đoạn sắp sinh." },
@@ -780,26 +363,34 @@
         function App() {
           const [activeTab, setActiveTab] = useState("development"); // "development" or "nutrition"
           
-          // Tab 1: Development States
+          // Unified Global Week State
           const [selectedWeek, setSelectedWeek] = useState(20);
-          
-          // Tab 2: Nutrition States
-          const [selectedTrimester, setSelectedTrimester] = useState(2);
-          const [selectedDay, setSelectedDay] = useState("Thứ 2");
-          const [swappedMeals, setSwappedMeals] = useState({}); // Stores key: 'trimester-day-mealIndex' -> boolean indicating alternative is chosen
 
-          // Weight Tracker Inputs
-          const [height, setHeight] = useState(160); // cm
-          const [weight, setWeight] = useState(55); // kg (pre-pregnancy)
-          const [currentWeek, setCurrentWeek] = useState(20); // week
-          const [currentWeight, setCurrentWeight] = useState(60); // kg
+          // Tab 2: Trimester State derived dynamically
+          const selectedTrimester = useMemo(() => {
+            if (selectedWeek <= 13) return 1;
+            if (selectedWeek <= 27) return 2;
+            return 3;
+          }, [selectedWeek]);
+
+          const [selectedDay, setSelectedDay] = useState("Thứ 2");
+          const [swappedMeals, setSwappedMeals] = useState({});
+
+          // Weight Tracker Inputs - CHANGED TO STRING INITIALIZATION TO ALLOW DECIMAL TYPING
+          const [height, setHeight] = useState("160"); // cm
+          const [weight, setWeight] = useState("55.0"); // kg (pre-pregnancy)
+          const [currentWeight, setCurrentWeight] = useState("60.0"); // kg
+          
           const [trackerCalculated, setTrackerCalculated] = useState(false);
           const [calcResult, setCalcResult] = useState(null);
 
-          // Active trimester config helper
+          useEffect(() => {
+            setTrackerCalculated(false); 
+            setCalcResult(null);
+          }, [selectedWeek]);
+
           const triConfig = TRIDATA[selectedTrimester];
 
-          // Helper key for meal swapped state
           const getMealKey = (tri, day, index) => `${tri}-${day}-${index}`;
 
           const toggleMealSwap = (index) => {
@@ -813,19 +404,27 @@
           // BMI & Healthy Weight Gain Range calculation
           const handleCalculateWeight = (e) => {
             e.preventDefault();
-            const heightInMeters = height / 100;
-            const bmi = weight / (heightInMeters * heightInMeters);
+            
+            // Parse String States to Floats safely
+            const numHeight = parseFloat(height) || 0;
+            const numWeight = parseFloat(weight) || 0;
+            const numCurrentWeight = parseFloat(currentWeight) || 0;
+
+            if (numHeight === 0 || numWeight === 0) return;
+
+            const heightInMeters = numHeight / 100;
+            const bmi = numWeight / (heightInMeters * heightInMeters);
             
             let category = "";
             let recommendedTotalMin = 0;
             let recommendedTotalMax = 0;
-            let ratePerWeekAfterT1 = 0; // kg/week in trimester 2 & 3
+            let ratePerWeekAfterT1 = 0; 
 
             if (bmi < 18.5) {
               category = "Thiếu cân (Underweight)";
               recommendedTotalMin = 12.5;
               recommendedTotalMax = 18.0;
-              ratePerWeekAfterT1 = 0.51; // kg/week
+              ratePerWeekAfterT1 = 0.51; 
             } else if (bmi >= 18.5 && bmi < 24.9) {
               category = "Cân nặng bình thường (Normal)";
               recommendedTotalMin = 11.5;
@@ -843,28 +442,27 @@
               ratePerWeekAfterT1 = 0.22;
             }
 
-            // Expected weight at current week
-            let expectedMin = weight;
-            let expectedMax = weight;
+            let expectedMin = numWeight;
+            let expectedMax = numWeight;
 
-            if (currentWeek <= 13) {
-              const progressRatio = currentWeek / 13;
-              expectedMin = weight + (0.5 * progressRatio);
-              expectedMax = weight + (2.0 * progressRatio);
+            if (selectedWeek <= 13) {
+              const progressRatio = selectedWeek / 13;
+              expectedMin = numWeight + (0.5 * progressRatio);
+              expectedMax = numWeight + (2.0 * progressRatio);
             } else {
-              const weeksPostT1 = currentWeek - 13;
-              expectedMin = weight + 0.5 + (ratePerWeekAfterT1 * weeksPostT1 * 0.85); // conservative
-              expectedMax = weight + 2.0 + (ratePerWeekAfterT1 * weeksPostT1 * 1.15); // liberal
+              const weeksPostT1 = selectedWeek - 13;
+              expectedMin = numWeight + 0.5 + (ratePerWeekAfterT1 * weeksPostT1 * 0.85);
+              expectedMax = numWeight + 2.0 + (ratePerWeekAfterT1 * weeksPostT1 * 1.15); 
             }
 
-            const currentGain = currentWeight - weight;
+            const currentGain = numCurrentWeight - numWeight;
             let statusText = "";
             let statusColor = "";
 
-            if (currentWeight < expectedMin) {
+            if (numCurrentWeight < expectedMin) {
               statusText = "Tăng cân chậm hơn khuyến nghị. Mẹ hãy tham khảo ý kiến bác sĩ và bổ sung thêm chất dinh dưỡng.";
               statusColor = "text-amber-600 bg-amber-50 border-amber-200";
-            } else if (currentWeight > expectedMax) {
+            } else if (numCurrentWeight > expectedMax) {
               statusText = "Tăng cân nhanh hơn khuyến nghị. Mẹ nên kiểm soát lượng tinh bột đường tinh chế và hỏi ý kiến bác sĩ để tầm soát tiểu đường thai kỳ.";
               statusColor = "text-red-600 bg-red-50 border-red-200";
             } else {
@@ -885,15 +483,15 @@
           };
 
           const handleResetWeight = () => {
-            setHeight(160);
-            setWeight(55);
-            setCurrentWeek(20);
-            setCurrentWeight(60);
+            setHeight("160");
+            setWeight("55.0");
+            setSelectedWeek(20);
+            setCurrentWeight("60.0");
             setTrackerCalculated(false);
             setCalcResult(null);
           };
 
-          // Generate dynamic grocery list based on currently selected day's menu
+          // Generate dynamic grocery list
           const currentDayMeals = triConfig.days[selectedDay] || [];
           const groceryList = useMemo(() => {
             const list = [];
@@ -925,7 +523,6 @@
           return (
             <div className="min-h-screen bg-slate-50 font-sans text-slate-800 antialiased pb-12">
               
-              {/* HEADER SECTION */}
               <header className="bg-gradient-to-r from-teal-700 via-emerald-700 to-emerald-800 text-white shadow-md relative overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1),transparent)] pointer-events-none"></div>
                 <div className="max-w-6xl mx-auto px-4 py-8 relative z-10">
@@ -946,10 +543,10 @@
                     <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-5 py-4 rounded-xl border border-white/20 self-center md:self-auto">
                       <IconHeart className="text-pink-400 animate-bounce" />
                       <div>
-                        <div className="text-xs text-teal-200 font-medium">Mốc thời gian chọn</div>
-                        <div className="text-lg font-bold">Tuần thứ {activeTab === "development" ? selectedWeek : currentWeek}</div>
+                        <div className="text-xs text-teal-200 font-medium">Đồng bộ tuần thai</div>
+                        <div className="text-lg font-bold">Tuần thứ {selectedWeek}</div>
                         <div className="text-xs text-emerald-300 font-medium">
-                          Tam cá nguyệt {(activeTab === "development" ? selectedWeek : currentWeek) <= 13 ? "1" : (activeTab === "development" ? selectedWeek : currentWeek) <= 27 ? "2" : "3"}
+                          Tam cá nguyệt {selectedTrimester}
                         </div>
                       </div>
                     </div>
@@ -957,7 +554,6 @@
                 </div>
               </header>
 
-              {/* TAB NAVIGATION PANEL */}
               <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
                 <div className="max-w-6xl mx-auto px-4">
                   <div className="flex gap-4">
@@ -987,14 +583,11 @@
                 </div>
               </div>
 
-              {/* MAIN APPLICATION CONTAINER */}
               <main className="max-w-6xl mx-auto px-4 py-8">
                 
-                {/* TAB 1: FETAL DEVELOPMENT VISUALIZER */}
                 {activeTab === "development" && (
                   <div className="space-y-8">
                     
-                    {/* WEEK SELECTOR SECTION */}
                     <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                         <div>
@@ -1005,7 +598,6 @@
                           <p className="text-xs text-slate-500 mt-1">Kéo thanh trượt hoặc sử dụng nút bấm để khám phá cột mốc của con yêu.</p>
                         </div>
                         
-                        {/* Micro input */}
                         <div className="flex items-center gap-2 self-start md:self-auto">
                           <button 
                             onClick={() => setSelectedWeek(prev => Math.max(1, prev - 1))}
@@ -1027,7 +619,6 @@
                         </div>
                       </div>
 
-                      {/* Slider Input */}
                       <div className="py-4">
                         <input 
                           type="range" 
@@ -1038,29 +629,26 @@
                           className="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-teal-600" 
                         />
                         <div className="flex justify-between text-xs text-slate-400 mt-2 font-medium">
-                          <span className="text-emerald-600 font-bold">Thụ thai (Tuần 1)</span>
-                          <span className="text-emerald-600">Tam cá nguyệt 1</span>
-                          <span className="text-pink-600">Tam cá nguyệt 2</span>
-                          <span className="text-amber-600">Tam cá nguyệt 3</span>
-                          <span className="text-amber-600 font-bold">Sinh bé (Tuần 40)</span>
+                          <span className="text-emerald-600 font-bold">Thụ thai (1)</span>
+                          <span className="text-emerald-600 hidden sm:inline">Tam cá nguyệt 1</span>
+                          <span className="text-pink-600 hidden sm:inline">Tam cá nguyệt 2</span>
+                          <span className="text-amber-600 hidden sm:inline">Tam cá nguyệt 3</span>
+                          <span className="text-amber-600 font-bold">Sinh bé (40)</span>
                         </div>
                       </div>
 
-                      {/* Rapid Access Quick Badges */}
                       <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap gap-2">
                         <span className="text-xs text-slate-400 font-semibold self-center mr-1">Mốc quan trọng:</span>
-                        <button onClick={() => setSelectedWeek(5)} className="text-xs bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 px-3 py-1.5 rounded-full font-medium transition-colors">Tuần 5: Tim thai đập</button>
+                        <button onClick={() => setSelectedWeek(5)} className="text-xs bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 px-3 py-1.5 rounded-full font-medium transition-colors">Tuần 5: Tim thai</button>
                         <button onClick={() => setSelectedWeek(12)} className="text-xs bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 px-3 py-1.5 rounded-full font-medium transition-colors">Tuần 12: Đo da gáy</button>
                         <button onClick={() => setSelectedWeek(20)} className="text-xs bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 px-3 py-1.5 rounded-full font-medium transition-colors">Tuần 20: Siêu âm 4D</button>
-                        <button onClick={() => setSelectedWeek(24)} className="text-xs bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 px-3 py-1.5 rounded-full font-medium transition-colors">Tuần 24: Nghiệm pháp đường</button>
-                        <button onClick={() => setSelectedWeek(37)} className="text-xs bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 px-3 py-1.5 rounded-full font-medium transition-colors">Tuần 37: Thai đủ tháng</button>
+                        <button onClick={() => setSelectedWeek(24)} className="text-xs bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 px-3 py-1.5 rounded-full font-medium transition-colors">Tuần 24: Tiểu đường</button>
+                        <button onClick={() => setSelectedWeek(37)} className="text-xs bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 px-3 py-1.5 rounded-full font-medium transition-colors">Tuần 37: Đủ tháng</button>
                       </div>
                     </div>
 
-                    {/* TWO-COLUMN DETAILED INFO PANEL */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                       
-                      {/* Left Side: Fruit Size Comparison Card */}
                       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-between text-center relative overflow-hidden">
                         <div className="absolute top-0 right-0 w-24 h-24 bg-teal-500/10 rounded-full blur-2xl pointer-events-none"></div>
                         
@@ -1069,7 +657,6 @@
                             Kích Thước Tuần {selectedWeek}
                           </span>
                           
-                          {/* Giant Emoji/Symbol representation */}
                           <div className="text-7xl my-6 filter drop-shadow-md transform hover:scale-110 transition-transform duration-300">
                             {weekData.fruitIcon}
                           </div>
@@ -1094,10 +681,8 @@
                         </div>
                       </div>
 
-                      {/* Right Side: Detailed Biological Milestones & Mom Care */}
                       <div className="lg:col-span-2 space-y-6">
                         
-                        {/* Main Development Info */}
                         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
                           <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
                             <div className="bg-teal-600 text-white p-2.5 rounded-xl">
@@ -1132,7 +717,6 @@
                           </div>
                         </div>
 
-                        {/* Mom Care Instructions for Selected Week */}
                         <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-6 rounded-2xl shadow-sm space-y-3">
                           <h4 className="font-bold text-base flex items-center gap-2">
                             <IconHeart className="text-pink-300" />
@@ -1143,15 +727,27 @@
                           </p>
                         </div>
 
+                        <div className="bg-slate-100 p-5 rounded-2xl border border-slate-200 text-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                          <div className="space-y-1">
+                            <h4 className="font-bold text-sm text-slate-800">Muốn xem thực đơn chuẩn cho tuần này?</h4>
+                            <p className="text-xs text-slate-500">Mẹ hãy bấm nút bên cạnh để xem chế độ ăn thích hợp cho tam cá nguyệt {selectedTrimester}.</p>
+                          </div>
+                          <button 
+                            onClick={() => setActiveTab("nutrition")}
+                            className="bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition-all shadow-sm shrink-0"
+                          >
+                            Xem Thực đơn TCN {selectedTrimester}
+                          </button>
+                        </div>
+
                       </div>
 
                     </div>
 
-                    {/* GENERAL ADVICE FOR ALL PREGNANCIES */}
                     <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
                       <h3 className="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
                         <IconBookOpen />
-                        Các Xét Nghiệm Quan Trọng Không Được Bỏ Lỡ
+                        Các Xét Nghiệm Quan Trọng
                       </h3>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-1">
@@ -1166,8 +762,8 @@
                         </div>
                         <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-1">
                           <span className="text-xs font-bold text-amber-600 uppercase block">Tuần 24 - 28</span>
-                          <h4 className="font-bold text-slate-800 text-sm">Nghiệm pháp dung nạp đường</h4>
-                          <p className="text-xs text-slate-500">Phát hiện sớm tiểu đường thai kỳ để điều chỉnh chế độ dinh dưỡng, tránh thai to hoặc đa ối.</p>
+                          <h4 className="font-bold text-slate-800 text-sm">Nghiệm pháp đường huyết</h4>
+                          <p className="text-xs text-slate-500">Phát hiện sớm tiểu đường thai kỳ để điều chỉnh chế độ dinh dưỡng.</p>
                         </div>
                       </div>
                     </div>
@@ -1175,16 +771,34 @@
                   </div>
                 )}
 
-                {/* TAB 2: INTERACTIVE NUTRITION CALCULATORS & MENUS */}
                 {activeTab === "nutrition" && (
                   <div className="space-y-8">
                     
-                    {/* STEP 1: SELECT TRIMESTER */}
                     <section className="mb-8">
-                      <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
-                        <span className="bg-teal-600 text-white text-xs px-2 py-1 rounded-md">Bước 1</span>
-                        Chọn Giai Đoạn Phát Triển Của Bé
-                      </h2>
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                        <div>
+                          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                            <span className="bg-teal-600 text-white text-xs px-2 py-1 rounded-md">Bước 1</span>
+                            Xem Giai Đoạn Phát Triển & Thực Đơn
+                          </h2>
+                          <p className="text-xs text-slate-500 mt-1">Đang đồng bộ thực đơn tương ứng với <span className="font-bold text-teal-600">Tuần thai thứ {selectedWeek}</span>.</p>
+                        </div>
+                        <div className="bg-slate-100 border border-slate-200 px-4 py-1.5 rounded-xl text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                          <span>Thay đổi tuần:</span>
+                          <input 
+                            type="number" 
+                            min="1" 
+                            max="40" 
+                            value={selectedWeek} 
+                            onChange={(e) => {
+                              const val = Math.min(40, Math.max(1, Number(e.target.value)));
+                              setSelectedWeek(val);
+                            }} 
+                            className="w-12 text-center bg-white border border-slate-300 rounded p-0.5 focus:outline-none focus:ring-1 focus:ring-teal-500"
+                          />
+                        </div>
+                      </div>
+                      
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {[1, 2, 3].map((num) => {
                           const data = TRIDATA[num];
@@ -1195,10 +809,7 @@
                           return (
                             <button
                               key={num}
-                              onClick={() => {
-                                setSelectedTrimester(num);
-                                setCurrentWeek(num === 1 ? 7 : num === 2 ? 20 : 34);
-                              }}
+                              onClick={() => setSelectedWeek(num === 1 ? 7 : num === 2 ? 20 : 34)}
                               className={`relative p-5 text-left rounded-2xl border-2 transition-all duration-300 bg-white ${
                                 isActive 
                                   ? `${borderCol} shadow-lg scale-[1.02] ring-2 ring-opacity-20` 
@@ -1231,13 +842,10 @@
                       </div>
                     </section>
 
-                    {/* PRIMARY LAYOUT GRID */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                       
-                      {/* LEFT 2 COLUMNS: INTERACTIVE WEEKLY MEAL PLANNER */}
                       <div className="lg:col-span-2 space-y-8">
                         
-                        {/* TRIMESTER FOCUS CARDS */}
                         <div className={`p-6 rounded-2xl border ${triConfig.bgClass} shadow-sm`}>
                           <h3 className="text-lg font-bold flex items-center gap-2">
                             <IconInfo />
@@ -1260,7 +868,6 @@
                           </div>
                         </div>
 
-                        {/* DAY SELECTOR TABS */}
                         <div>
                           <div className="flex items-center justify-between mb-4">
                             <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
@@ -1295,7 +902,6 @@
                           </div>
                         </div>
 
-                        {/* THE MENU CARD CONTAINER */}
                         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                           <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                             <div className="flex items-center gap-2">
@@ -1331,7 +937,7 @@
                                             <span>{item.main}</span>
                                           )}
                                           {isSwapped && (
-                                            <span className="inline-flex items-center gap-1 text-xs bg-purple-50 text-purple-700 border border-purple-200 px-2.5 py-0.5 rounded-full">
+                                            <span className="inline-flex items-center gap-1 text-xs bg-purple-50 text-purple-700 border border-purple-200 px-2.5 py-0.5 rounded-full font-semibold">
                                               Đã đổi món: {item.alt}
                                             </span>
                                           )}
@@ -1346,7 +952,7 @@
                                       )}
 
                                       <div className="mt-3 bg-slate-100/70 rounded-lg p-2.5 border border-slate-200/40 text-xs text-slate-600 flex items-start gap-1.5">
-                                        <span className="font-bold text-slate-700 shrink-0">Lưu ý khoa học:</span>
+                                        <span className="font-bold text-slate-700 shrink-0">Lưu ý:</span>
                                         <span>{item.note}</span>
                                       </div>
                                     </div>
@@ -1361,7 +967,7 @@
                                         }`}
                                       >
                                         <IconRotateCcw />
-                                        {isSwapped ? "Khôi phục món chính" : "Đổi món chống chán"}
+                                        {isSwapped ? "Khôi phục món chính" : "Đổi món"}
                                       </button>
                                     </div>
                                   </div>
@@ -1371,20 +977,16 @@
                           </div>
                         </div>
 
-                        {/* SAFE & WARNING BOXES */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          {/* SHOULD EAT */}
                           <div className="bg-white p-5 rounded-2xl border border-emerald-100 shadow-sm">
                             <div className="flex items-center gap-2 text-emerald-700 border-b border-emerald-50 pb-3 mb-4">
                               <IconCheckCircle2 className="fill-emerald-50 text-emerald-600" />
-                              <h3 className="font-bold text-lg">Khuyên Dùng Cho Mẹ</h3>
+                              <h3 className="font-bold text-lg">Khuyên Dùng</h3>
                             </div>
                             <div className="space-y-3.5">
                               {RECOMMENDATIONS.shouldEat.map((rec, i) => (
                                 <div key={i} className="flex items-start gap-2.5 text-sm">
-                                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold shrink-0 mt-0.5">
-                                    ✓
-                                  </span>
+                                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold shrink-0 mt-0.5">✓</span>
                                   <div>
                                     <h4 className="font-bold text-slate-900">{rec.name}</h4>
                                     <p className="text-xs text-slate-500 mt-0.5 leading-normal">{rec.benefit}</p>
@@ -1394,18 +996,15 @@
                             </div>
                           </div>
 
-                          {/* MUST AVOID */}
                           <div className="bg-white p-5 rounded-2xl border border-rose-100 shadow-sm">
                             <div className="flex items-center gap-2 text-rose-700 border-b border-rose-50 pb-3 mb-4">
                               <IconAlertTriangle className="fill-rose-50 text-rose-600" />
-                              <h3 className="font-bold text-lg">Cấm / Hạn Chế Tuyệt Đối</h3>
+                              <h3 className="font-bold text-lg">Cấm / Hạn Chế</h3>
                             </div>
                             <div className="space-y-3.5">
                               {RECOMMENDATIONS.mustAvoid.map((rec, i) => (
                                 <div key={i} className="flex items-start gap-2.5 text-sm">
-                                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-rose-50 text-rose-600 text-xs font-bold shrink-0 mt-0.5">
-                                    ✕
-                                  </span>
+                                  <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-rose-50 text-rose-600 text-xs font-bold shrink-0 mt-0.5">✕</span>
                                   <div>
                                     <h4 className="font-bold text-slate-900">{rec.name}</h4>
                                     <p className="text-xs text-slate-500 mt-0.5 leading-normal">{rec.reason}</p>
@@ -1418,69 +1017,71 @@
 
                       </div>
 
-                      {/* RIGHT 1 COLUMN: CALCULATORS & ASSISTIVE TOOLS */}
                       <div className="space-y-8">
                         
-                        {/* WEIGHT GAIN TRACKER */}
+                        {/* THE MODIFIED CALCULATOR SECTION */}
                         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                           <div className="p-5 border-b border-slate-100 bg-gradient-to-r from-teal-50 to-emerald-50 flex items-center gap-2">
                             <IconCalculator />
-                            <h3 className="font-bold text-slate-800 text-base">Máy Tính Chỉ Số Tăng Cân (IOM)</h3>
+                            <h3 className="font-bold text-slate-800 text-base">Máy Tính Tăng Cân (Cho Phép Số Thập Phân)</h3>
                           </div>
                           
                           <div className="p-5">
                             <form onSubmit={handleCalculateWeight} className="space-y-4">
                               <div>
                                 <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Chiều cao của mẹ (cm)</label>
+                                {/* Added step="any" */}
                                 <input 
                                   type="number" 
+                                  step="any"
                                   value={height} 
-                                  onChange={(e) => setHeight(Number(e.target.value))} 
+                                  onChange={(e) => setHeight(e.target.value)} 
                                   className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none" 
                                   required
+                                  placeholder="Ví dụ: 160.5"
                                 />
                               </div>
                               
                               <div className="grid grid-cols-2 gap-4">
                                 <div>
                                   <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Cân trước bầu (kg)</label>
+                                  {/* Added step="any" */}
                                   <input 
                                     type="number" 
+                                    step="any"
                                     value={weight} 
-                                    onChange={(e) => setWeight(Number(e.target.value))} 
+                                    onChange={(e) => setWeight(e.target.value)} 
                                     className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none" 
                                     required
+                                    placeholder="Ví dụ: 55.5"
                                   />
                                 </div>
                                 <div>
                                   <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Cân hiện tại (kg)</label>
+                                  {/* Added step="any" */}
                                   <input 
                                     type="number" 
+                                    step="any"
                                     value={currentWeight} 
-                                    onChange={(e) => setCurrentWeight(Number(e.target.value))} 
+                                    onChange={(e) => setCurrentWeight(e.target.value)} 
                                     className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none" 
                                     required
+                                    placeholder="Ví dụ: 60.2"
                                   />
                                 </div>
                               </div>
 
                               <div>
                                 <div className="flex justify-between items-center mb-1">
-                                  <label className="block text-xs font-bold text-slate-600 uppercase">Tuần thai hiện tại ({currentWeek} tuần)</label>
-                                  <span className="text-xs font-bold text-teal-600">Tháng thứ {Math.ceil(currentWeek / 4.3)}</span>
+                                  <label className="block text-xs font-bold text-slate-600 uppercase">Kiểm tra tại: Tuần {selectedWeek}</label>
+                                  <span className="text-xs font-bold text-teal-600">Tháng thứ {Math.ceil(selectedWeek / 4.3)}</span>
                                 </div>
                                 <input 
                                   type="range" 
                                   min="1" 
                                   max="40" 
-                                  value={currentWeek} 
-                                  onChange={(e) => {
-                                    const val = Number(e.target.value);
-                                    setCurrentWeek(val);
-                                    if (val <= 13) setSelectedTrimester(1);
-                                    else if (val <= 27) setSelectedTrimester(2);
-                                    else setSelectedTrimester(3);
-                                  }} 
+                                  value={selectedWeek} 
+                                  onChange={(e) => setSelectedWeek(Number(e.target.value))} 
                                   className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-teal-600" 
                                 />
                               </div>
@@ -1524,7 +1125,7 @@
                                     <span className="font-bold text-slate-800">{calcResult.recommendedTotal}</span>
                                   </div>
                                   <div className="flex justify-between text-xs">
-                                    <span className="text-slate-500 font-medium">Chuẩn cân nặng tuần {currentWeek}:</span>
+                                    <span className="text-slate-500 font-medium">Chuẩn cân nặng tuần {selectedWeek}:</span>
                                     <span className="font-bold text-teal-700">{calcResult.expectedRange}</span>
                                   </div>
                                 </div>
@@ -1538,7 +1139,6 @@
                           </div>
                         </div>
 
-                        {/* QUICK GROCERY / PREPARATION LIST */}
                         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                           <div className="p-5 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
                             <div className="flex items-center gap-2">
@@ -1568,7 +1168,6 @@
                           </div>
                         </div>
 
-                        {/* CREDIBLE ORGANIZATIONS REFERENCES */}
                         <div className="bg-slate-100 p-5 rounded-2xl border border-slate-200/60">
                           <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                             <IconBookOpen />
@@ -1582,9 +1181,6 @@
                               </li>
                             ))}
                           </ul>
-                          <div className="mt-4 border-t border-slate-200/60 pt-3 text-[10px] text-slate-400 italic">
-                            *Các thông tin trên ứng dụng chỉ mang tính chất tham khảo hữu ích. Mẹ hãy luôn tuân thủ phác đồ khám thai và tham vấn ý kiến từ bác sĩ sản khoa trực tiếp chăm sóc mẹ.
-                          </div>
                         </div>
 
                       </div>
@@ -1596,23 +1192,14 @@
 
               </main>
 
-              {/* FOOTER */}
-              <footer className="bg-slate-900 text-slate-400 text-xs py-8 mt-12 border-t border-slate-800">
-                <div className="max-w-6xl mx-auto px-4 text-center space-y-3">
-                  <p>© 2026 Cẩm Nang & Thực Đơn Dinh Dưỡng Thai Kỳ. Thiết kế chuẩn y khoa quốc gia.</p>
-                  <p className="text-slate-600 font-medium">Phát triển chuyên biệt để hỗ trợ bà bầu lên thực đơn và bảo vệ sức khỏe bé từ bụng mẹ.</p>
-                </div>
-              </footer>
-
             </div>
           );
         }
 
-        // Render React components inside HTML root div
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
 </body>
 </html>
 
-
+```
