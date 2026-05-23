@@ -32,6 +32,14 @@
         input[type="range"]::-webkit-slider-thumb:hover {
             transform: scale(1.15);
         }
+        /* Hide scrollbar for tab navigation */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen">
@@ -83,6 +91,9 @@
         );
         const IconChevronRight = () => (
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        );
+        const IconSmile = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg>
         );
 
         // --- DATABASE: 40 WEEKS OF FETAL DEVELOPMENT ---
@@ -258,7 +269,7 @@
               "Chủ Nhật": [
                 { meal: "Bữa sáng (7:00)", main: "Bún bò Huế tái chín đầy đủ giò heo", alt: "Bánh mì bò kho", note: "Cung cấp năng lượng dồi dào bắt đầu ngày chủ nhật vui vẻ." },
                 { meal: "Bữa phụ sáng (9:30)", main: "1 đĩa dâu tây ngọt mát + hạnh nhân", alt: "Sinh tố việt quất sữa chua", note: "Dâu tây giàu chất chống oxy hóa bảo vệ nhau thai." },
-                { meal: "Bữa trưa (12:00)", main: "Cơm + Cá thu sốt cà chua thơm ngọt + Canh mướp đắng nhồi thịt", alt: "Cơm + Gà luộc + Canh khoai tây sườn", note: "Cá thu nhỏ giàu omega-3 lành mạnh cho trí脑 bé." },
+                { meal: "Bữa trưa (12:00)", main: "Cơm + Cá thu sốt cà chua thơm ngọt + Canh mướp đắng nhồi thịt", alt: "Cơm + Gà luộc + Canh khoai tây sườn", note: "Cá thu nhỏ giàu omega-3 lành mạnh cho trí não bé." },
                 { meal: "Bữa phụ chiều (15:00)", main: "1 ly sữa ngũ cốc yến mạch ấm", alt: "Khoai tây hấp lò vi sóng + bơ thực vật", note: "Cung cấp năng lượng sạch từ tinh bột phức tạp." },
                 { meal: "Bữa tối (18:30)", main: "Cơm + Gà hấp nấm + Canh rong biển thịt bò băm", alt: "Cơm + Mực nhồi thịt sốt cà + Canh cải thảo", note: "Canh rong biển dồi dào canxi, i-ốt và khoáng chất tự nhiên cực quý." },
                 { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa tươi tiệt trùng ấm + vài hạt óc chó", alt: "Sữa hạt điều sen", note: "Kích thích giấc ngủ sinh lý êm ái cho mẹ." }
@@ -360,8 +371,32 @@
           ]
         };
 
+        // --- DATA: HUSBAND'S ROLE ---
+        const HUSBAND_ROLES = {
+          physical: [
+              { title: "Sẻ chia việc nhà", desc: "Chủ động làm việc nhà: dọn dẹp, giặt giũ, nấu ăn, đặc biệt là các công việc nặng nhọc hoặc cần tiếp xúc hóa chất tẩy rửa." },
+              { title: "Chăm sóc dinh dưỡng", desc: "Nhắc nhở và chuẩn bị thức ăn, sữa, trái cây cho vợ. Hỗ trợ pha sữa, nấu các món ăn vợ thèm hoặc nấu theo thực đơn dinh dưỡng." },
+              { title: "Massage thư giãn", desc: "Massage lưng, vai, gáy và đặc biệt là xoa bóp bắp chân, bàn chân mỗi tối để giúp vợ giảm đau mỏi và hạn chế chuột rút." },
+              { title: "Đưa đón khám thai", desc: "Sắp xếp thời gian đưa vợ đi siêu âm, làm xét nghiệm. Ghi nhớ các mốc khám thai quan trọng và lời khuyên của bác sĩ." },
+              { title: "Chuẩn bị đồ đi sinh", desc: "Cùng vợ đi mua sắm và đóng gói giỏ đồ đi sinh. Tìm hiểu và chuẩn bị hồ sơ đăng ký sinh tại bệnh viện." }
+          ],
+          mental: [
+              { title: "Lắng nghe và thấu hiểu", desc: "Sự thay đổi hormone khiến mẹ bầu cực kỳ nhạy cảm, dễ tủi thân và cáu gắt. Hãy kiên nhẫn lắng nghe, không phán xét và luôn nhẹ nhàng." },
+              { title: "Gắn kết với thai nhi", desc: "Thường xuyên áp tai vào bụng vợ để nói chuyện, hát hoặc đọc sách cho con nghe (thai giáo). Bé bắt đầu nghe được giọng của bố từ tuần 18." },
+              { title: "Khích lệ và khen ngợi", desc: "Vóc dáng vợ thay đổi nhiều (rạn da, sạm nám, tăng cân). Hãy thường xuyên khen vợ đẹp, nói lời yêu thương để vợ tự tin hơn." },
+              { title: "Hạn chế căng thẳng", desc: "Tránh mọi xung đột, cãi vã. Tạo môi trường sống vui vẻ, thoải mái, có thể cùng nhau đi dạo, xem phim hài, nghe nhạc thư giãn." },
+              { title: "Tìm hiểu kiến thức", desc: "Chủ động đọc sách, tìm hiểu kiến thức về thai kỳ, dấu hiệu chuyển dạ, cách chăm sóc trẻ sơ sinh để làm điểm tựa vững chắc cho vợ." }
+          ],
+          donts: [
+              "Tuyệt đối không hút thuốc lá (ngay cả hút thuốc thụ động cũng cực kỳ nguy hiểm cho sự phát triển của thai nhi).",
+              "Không để vợ mang vác vật nặng, với tay lấy đồ trên cao hoặc leo trèo cầu thang quá nhiều.",
+              "Không ép vợ ăn những món vợ không thích, sợ mùi hoặc gây nghén.",
+              "Không chê bai vóc dáng, ngoại hình của vợ trong và sau thai kỳ."
+          ]
+        };
+
         function App() {
-          const [activeTab, setActiveTab] = useState("development"); // "development" or "nutrition"
+          const [activeTab, setActiveTab] = useState("development"); // "development", "nutrition", "husband"
           
           // Unified Global Week State
           const [selectedWeek, setSelectedWeek] = useState(20);
@@ -376,8 +411,8 @@
           const [selectedDay, setSelectedDay] = useState("Thứ 2");
           const [swappedMeals, setSwappedMeals] = useState({});
 
-          // Weight Tracker Inputs - CHANGED TO STRING INITIALIZATION TO ALLOW DECIMAL TYPING
-          const [height, setHeight] = useState("160"); // cm
+          // Weight Tracker Inputs - Cho phép số thập phân
+          const [height, setHeight] = useState("160.0"); // cm
           const [weight, setWeight] = useState("55.0"); // kg (pre-pregnancy)
           const [currentWeight, setCurrentWeight] = useState("60.0"); // kg
           
@@ -399,6 +434,15 @@
               ...prev,
               [key]: !prev[key]
             }));
+          };
+
+          // Hàm hỗ trợ nhập liệu số thập phân linh hoạt
+          const handleDecimalInput = (setter) => (e) => {
+              let val = e.target.value.replace(/[^0-9.,]/g, '').replace(',', '.');
+              // Chỉ giữ lại 1 dấu chấm thập phân duy nhất
+              const parts = val.split('.');
+              if (parts.length > 2) val = parts[0] + '.' + parts.slice(1).join('');
+              setter(val);
           };
 
           // BMI & Healthy Weight Gain Range calculation
@@ -483,7 +527,7 @@
           };
 
           const handleResetWeight = () => {
-            setHeight("160");
+            setHeight("160.0");
             setWeight("55.0");
             setSelectedWeek(20);
             setCurrentWeight("60.0");
@@ -556,28 +600,39 @@
 
               <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
                 <div className="max-w-6xl mx-auto px-4">
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 overflow-x-auto no-scrollbar">
                     <button
                       onClick={() => setActiveTab("development")}
-                      className={`flex items-center gap-2 py-4 px-4 font-bold text-sm border-b-2 transition-all ${
+                      className={`flex items-center whitespace-nowrap gap-2 py-4 px-4 font-bold text-sm border-b-2 transition-all ${
                         activeTab === "development"
                           ? "border-teal-600 text-teal-600"
                           : "border-transparent text-slate-500 hover:text-slate-700"
                       }`}
                     >
                       <IconBaby />
-                      Hành Trình Bé Lớn Khôn (40 Tuần)
+                      Hành Trình Bé Lớn Khôn
                     </button>
                     <button
                       onClick={() => setActiveTab("nutrition")}
-                      className={`flex items-center gap-2 py-4 px-4 font-bold text-sm border-b-2 transition-all ${
+                      className={`flex items-center whitespace-nowrap gap-2 py-4 px-4 font-bold text-sm border-b-2 transition-all ${
                         activeTab === "nutrition"
                           ? "border-teal-600 text-teal-600"
                           : "border-transparent text-slate-500 hover:text-slate-700"
                       }`}
                     >
                       <IconUtensils />
-                      Thực Đơn Dinh Dưỡng Tương Tác
+                      Thực Đơn Dinh Dưỡng
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("husband")}
+                      className={`flex items-center whitespace-nowrap gap-2 py-4 px-4 font-bold text-sm border-b-2 transition-all ${
+                        activeTab === "husband"
+                          ? "border-teal-600 text-teal-600"
+                          : "border-transparent text-slate-500 hover:text-slate-700"
+                      }`}
+                    >
+                      <IconSmile />
+                      Góc Dành Cho Bố
                     </button>
                   </div>
                 </div>
@@ -877,7 +932,7 @@
                             <span className="text-xs text-slate-500 italic">Chọn một ngày để tra cứu món ăn</span>
                           </div>
                           
-                          <div className="flex flex-wrap gap-2 pb-2 overflow-x-auto">
+                          <div className="flex flex-wrap gap-2 pb-2 overflow-x-auto no-scrollbar">
                             {Object.keys(triConfig.days).map((day) => {
                               const isDayActive = selectedDay === day;
                               const activeColorClass = 
@@ -1019,23 +1074,21 @@
 
                       <div className="space-y-8">
                         
-                        {/* THE MODIFIED CALCULATOR SECTION */}
                         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                           <div className="p-5 border-b border-slate-100 bg-gradient-to-r from-teal-50 to-emerald-50 flex items-center gap-2">
                             <IconCalculator />
-                            <h3 className="font-bold text-slate-800 text-base">Máy Tính Tăng Cân (Cho Phép Số Thập Phân)</h3>
+                            <h3 className="font-bold text-slate-800 text-base">Máy Tính Tăng Cân Thai Kỳ</h3>
                           </div>
                           
                           <div className="p-5">
                             <form onSubmit={handleCalculateWeight} className="space-y-4">
                               <div>
                                 <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Chiều cao của mẹ (cm)</label>
-                                {/* Added step="any" */}
                                 <input 
-                                  type="number" 
-                                  step="any"
+                                  type="text" 
+                                  inputMode="decimal"
                                   value={height} 
-                                  onChange={(e) => setHeight(e.target.value)} 
+                                  onChange={handleDecimalInput(setHeight)} 
                                   className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none" 
                                   required
                                   placeholder="Ví dụ: 160.5"
@@ -1045,12 +1098,11 @@
                               <div className="grid grid-cols-2 gap-4">
                                 <div>
                                   <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Cân trước bầu (kg)</label>
-                                  {/* Added step="any" */}
                                   <input 
-                                    type="number" 
-                                    step="any"
+                                    type="text" 
+                                    inputMode="decimal"
                                     value={weight} 
-                                    onChange={(e) => setWeight(e.target.value)} 
+                                    onChange={handleDecimalInput(setWeight)} 
                                     className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none" 
                                     required
                                     placeholder="Ví dụ: 55.5"
@@ -1058,12 +1110,11 @@
                                 </div>
                                 <div>
                                   <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Cân hiện tại (kg)</label>
-                                  {/* Added step="any" */}
                                   <input 
-                                    type="number" 
-                                    step="any"
+                                    type="text" 
+                                    inputMode="decimal"
                                     value={currentWeight} 
-                                    onChange={(e) => setCurrentWeight(e.target.value)} 
+                                    onChange={handleDecimalInput(setCurrentWeight)} 
                                     className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none" 
                                     required
                                     placeholder="Ví dụ: 60.2"
@@ -1185,6 +1236,81 @@
 
                       </div>
 
+                    </div>
+
+                  </div>
+                )}
+
+                {activeTab === "husband" && (
+                  <div className="space-y-8 animate-in fade-in duration-500">
+                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                      <div className="text-center max-w-3xl mx-auto">
+                        <h2 className="text-2xl font-bold text-teal-700 flex items-center justify-center gap-2 mb-3">
+                          <IconSmile /> Góc Dành Cho Bố: Điểm Tựa Vững Chắc
+                        </h2>
+                        <p className="text-slate-600 text-sm leading-relaxed">
+                          Thai kỳ là một hành trình tuyệt vời nhưng cũng đầy gian nan đối với người mẹ. Sự đồng hành, thấu hiểu và san sẻ của người chồng trong giai đoạn này là liều thuốc tinh thần và thể chất vô giá nhất giúp vợ vượt qua mọi khó khăn để mẹ tròn con vuông.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      {/* Thể chất */}
+                      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div className="bg-teal-50 border-b border-teal-100 p-4 flex items-center gap-2">
+                          <span className="bg-teal-600 text-white p-1.5 rounded-lg">
+                            <IconSparkles />
+                          </span>
+                          <h3 className="font-bold text-teal-800 text-lg">Hỗ Trợ Về Thể Chất</h3>
+                        </div>
+                        <div className="p-5 space-y-4">
+                          {HUSBAND_ROLES.physical.map((item, idx) => (
+                            <div key={idx} className="flex items-start gap-3">
+                              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center font-bold text-xs mt-0.5">{idx + 1}</span>
+                              <div>
+                                <h4 className="font-bold text-slate-800">{item.title}</h4>
+                                <p className="text-sm text-slate-600 mt-1 leading-relaxed">{item.desc}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Tinh thần */}
+                      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div className="bg-pink-50 border-b border-pink-100 p-4 flex items-center gap-2">
+                          <span className="bg-pink-600 text-white p-1.5 rounded-lg">
+                            <IconHeart />
+                          </span>
+                          <h3 className="font-bold text-pink-800 text-lg">Hỗ Trợ Về Tinh Thần</h3>
+                        </div>
+                        <div className="p-5 space-y-4">
+                          {HUSBAND_ROLES.mental.map((item, idx) => (
+                            <div key={idx} className="flex items-start gap-3">
+                              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-pink-100 text-pink-700 flex items-center justify-center font-bold text-xs mt-0.5">{idx + 1}</span>
+                              <div>
+                                <h4 className="font-bold text-slate-800">{item.title}</h4>
+                                <p className="text-sm text-slate-600 mt-1 leading-relaxed">{item.desc}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Cần Tránh */}
+                    <div className="bg-rose-50 rounded-2xl border border-rose-200 p-6 shadow-sm">
+                      <h3 className="font-bold text-rose-800 text-lg flex items-center gap-2 mb-4">
+                        <IconAlertTriangle /> Những Điều Bố Tuyệt Đối Cần Tránh
+                      </h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {HUSBAND_ROLES.donts.map((item, idx) => (
+                          <div key={idx} className="flex items-start gap-2 text-sm text-rose-700 bg-white/60 p-3 rounded-xl border border-rose-100">
+                            <span className="font-bold mt-0.5">✕</span>
+                            <span>{item}</span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
 
                   </div>
