@@ -1,0 +1,1548 @@
+```react
+import React, { useState, useMemo } from 'react';
+import { 
+  Apple, 
+  Utensils, 
+  AlertTriangle, 
+  CheckCircle2, 
+  Calculator, 
+  BookOpen, 
+  RotateCcw, 
+  ShoppingBag, 
+  Heart, 
+  Info, 
+  Sparkles,
+  Calendar,
+  Layers,
+  Baby,
+  ChevronRight,
+  ChevronLeft
+} from 'lucide-react';
+
+// --- DATA: 40 WEEKS OF FETAL DEVELOPMENT ---
+const WEEKS_DEVELOPMENT = {
+  1: {
+    title: "Chuẩn bị rụng trứng",
+    sizeComparison: "Chưa có kích thước",
+    weight: "~ 0 g",
+    length: "~ 0 mm",
+    fruitIcon: "🥚",
+    fruitName: "Tế bào trứng chuẩn bị",
+    description: "Cơ thể mẹ đang ở chu kỳ kinh nguyệt cuối cùng. Tử cung bắt đầu làm dày lớp niêm mạc giàu chất dinh dưỡng để sẵn sàng đón nhận trứng thụ tinh.",
+    babyMilestone: "Trứng rụng và chuẩn bị gặp tinh trùng để tạo nên một mầm sống mới.",
+    momCare: "Uống bổ sung Acid Folic ngay từ lúc này (400 mcg/ngày) để giảm 90% nguy cơ dị tật ống thần kinh sau này."
+  },
+  2: {
+    title: "Sự thụ thai kỳ diệu",
+    sizeComparison: "Siêu nhỏ",
+    weight: "~ 0 g",
+    length: "~ 0.1 mm",
+    fruitIcon: "✨",
+    fruitName: "Hợp tử siêu nhỏ",
+    description: "Sự thụ tinh xảy ra khi tinh trùng gặp trứng tại ống dẫn trứng tạo thành hợp tử. Giới tính và toàn bộ đặc điểm di truyền của bé đã được quyết định ngay tại giây phút này.",
+    babyMilestone: "Hợp tử bắt đầu phân bào liên tục và di chuyển dần về phía tử cung.",
+    momCare: "Giữ tinh thần thoải mái, tránh xa khói thuốc lá, rượu bia và các chất kích thích."
+  },
+  3: {
+    title: "Làm tổ trong tử cung",
+    sizeComparison: "Kích thước bằng một hạt cát nhỏ",
+    weight: "~ 0.1 g",
+    length: "~ 0.15 mm",
+    fruitIcon: "🥪",
+    fruitName: "Hạt muối nhỏ",
+    description: "Phôi dâu nay đã phát triển thành phôi nang và bám chặt vào lớp niêm mạc tử cung để làm tổ vững chắc.",
+    babyMilestone: "Hình thành các lớp tế bào ban đầu: nội bì, trung bì và ngoại bì để sau này phát triển thành các cơ quan riêng biệt.",
+    momCare: "Tránh các hoạt động thể chất quá mạnh hay mang vác vật nặng. Ăn các thực phẩm ấm, dễ tiêu."
+  },
+  4: {
+    title: "Mầm sống bén rễ",
+    sizeComparison: "Bằng hạt anh túc (Poppy seed)",
+    weight: "~ 0.2 g",
+    length: "~ 0.36 mm",
+    fruitIcon: "🍓",
+    fruitName: "Hạt anh túc",
+    description: "Phôi thai lúc này đã bám rễ sâu vào tử cung. Các mạch máu đầu tiên liên kết mẹ và bé bắt đầu hình thành.",
+    babyMilestone: "Sự hình thành nhau thai sơ khai bắt đầu sản sinh hormone hCG (khiến que thử thai lên 2 vạch).",
+    momCare: "Mẹ có thể dùng que thử thai để kiểm tra. Hãy hẹn lịch khám với bác sĩ sản khoa lần đầu tiên."
+  },
+  5: {
+    title: "Ống thần kinh đóng lại",
+    sizeComparison: "Bằng hạt táo nhỏ",
+    weight: "~ 0.4 g",
+    length: "~ 1.25 mm",
+    fruitIcon: "🍎",
+    fruitName: "Hạt táo",
+    description: "Ống thần kinh của bé (sẽ phát triển thành não bộ và tủy sống) chính thức đóng lại trong tuần này.",
+    babyMilestone: "Tim thai thô sơ bắt đầu đập những nhịp đầu tiên, hệ tuần hoàn thô sơ bắt đầu hoạt động.",
+    momCare: "Duy trì uống Acid Folic và Sắt đều đặn. Nếu bắt đầu nghén, hãy uống trà gừng ấm để làm dịu dạ dày."
+  },
+  6: {
+    title: "Tim thai đập rộn ràng",
+    sizeComparison: "Bằng một hạt đậu xanh",
+    weight: "~ 0.8 g",
+    length: "~ 4 mm",
+    fruitIcon: "🥦",
+    fruitName: "Hạt đậu xanh",
+    description: "Tim của bé hiện tại đập khoảng 100 - 150 nhịp/phút (nhanh gấp đôi người lớn). Các chồi tay và chân bắt đầu nhú ra.",
+    babyMilestone: "Mũi, miệng và tai của bé bắt đầu định hình rõ rệt trên siêu âm độ phân giải cao.",
+    momCare: "Tránh tự ý uống bất kỳ loại thuốc nào mà chưa có sự đồng ý của bác sĩ sản khoa."
+  },
+  7: {
+    title: "Chồi tay chân phát triển",
+    sizeComparison: "Bằng một quả việt quất",
+    weight: "~ 1 g",
+    length: "~ 8 mm",
+    fruitIcon: "🫐",
+    fruitName: "Quả việt quất",
+    description: "Não bộ phát triển thần tốc, sản sinh ra hàng trăm ngàn tế bào thần kinh mới mỗi phút. Các chồi chi dài ra rõ rệt.",
+    babyMilestone: "Ống dẫn thở bắt đầu nối dài từ cổ họng đến lá phổi sơ khai của bé.",
+    momCare: "Nên ăn nhiều bữa nhỏ để đối phó với chứng buồn nôn. Hãy chuẩn bị sẵn bánh quy lạt bên giường."
+  },
+  8: {
+    title: "Hình thành ngón tay, ngón chân",
+    sizeComparison: "Bằng một quả mâm xôi",
+    weight: "~ 1.5 g",
+    length: "~ 1.6 cm",
+    fruitIcon: "🍒",
+    fruitName: "Quả mâm xôi",
+    description: "Các ngón tay và chân nhỏ xíu có màng đang hình thành. Bé bắt đầu có những cử động tự phát nhưng mẹ chưa thể cảm nhận được.",
+    babyMilestone: "Hệ xương khớp bắt đầu quá trình sụn hóa. Đuôi phôi thai nhỏ dần và chuẩn bị biến mất.",
+    momCare: "Cần bổ sung thêm thực phẩm dồi dào canxi từ sữa tiệt trùng, phô mai để hỗ trợ hình thành sụn xương."
+  },
+  9: {
+    title: "Bé chính thức là 'Thai nhi'",
+    sizeComparison: "Bằng một quả nho lớn",
+    weight: "~ 2 g",
+    length: "~ 2.3 cm",
+    fruitIcon: "🍇",
+    fruitName: "Quả nho lớn",
+    description: "Đuôi phôi thai đã hoàn toàn biến mất. Giai đoạn phôi kết thúc, em bé chính thức được gọi y học là 'Thai nhi'.",
+    babyMilestone: "Nhịp tim thai đạt đỉnh khoảng 170 nhịp/phút. Các cơ quan nội tạng quan trọng bắt đầu tự định vị trí.",
+    momCare: "Uống nhiều nước ấm (2 lít mỗi ngày). Hạn chế tối đa đồ ăn dầu mỡ gây khó tiêu, trào ngược dạ dày."
+  },
+  10: {
+    title: "Các khớp hoạt động",
+    sizeComparison: "Bằng quả quất (tắc) chín",
+    weight: "~ 4 g",
+    length: "~ 3.1 cm",
+    fruitIcon: "🍊",
+    fruitName: "Quả quất chín",
+    description: "Xương sườn và xương sống của bé đang định hình rõ nét. Các khớp khuỷu tay và đầu gối đã có thể gập mở.",
+    babyMilestone: "Móng tay và móng chân siêu nhỏ bắt đầu xuất hiện dưới lớp da mỏng manh.",
+    momCare: "Mẹ hãy đi xét nghiệm công thức máu toàn phần nếu chưa thực hiện để phát hiện sớm tình trạng thiếu máu."
+  },
+  11: {
+    title: "Phản xạ ban đầu",
+    sizeComparison: "Bằng một quả sung ngọt",
+    weight: "~ 7 g",
+    length: "~ 4.1 cm",
+    fruitIcon: "🍍",
+    fruitName: "Quả sung ngọt",
+    description: "Bé đã có thể mở và khép bàn tay nhỏ bé của mình. Hệ tiêu hóa (ruột) bắt đầu di chuyển từ dây rốn về khoang bụng.",
+    babyMilestone: "Bé bắt đầu tập nuốt nước ối và thận bắt đầu lọc, bài tiết nước tiểu thô sơ ra môi trường ối.",
+    momCare: "Thích hợp nhất để làm xét nghiệm sàng lọc không xâm lấn NIPT hoặc Double Test (Tuần 11 - 13) để phát hiện dị tật nhiễm sắc thể."
+  },
+  12: {
+    title: "Hoàn thiện cấu trúc sơ bộ",
+    sizeComparison: "Bằng một quả chanh ta",
+    weight: "~ 14 g",
+    length: "~ 5.4 cm",
+    fruitIcon: "🍋",
+    fruitName: "Quả chanh ta",
+    description: "Gần như toàn bộ hệ thống cơ quan của bé đã phát triển hoàn chỉnh cấu trúc cơ bản. Nguy cơ sảy thai tự nhiên giảm mạnh.",
+    babyMilestone: "Hệ thống thần kinh phản xạ phát triển mạnh, bé sẽ giật mình nhẹ nếu mẹ ấn nhẹ vào bụng.",
+    momCare: "Đây là mốc đo độ mờ da gáy cực kỳ quan trọng bằng siêu âm để tầm soát hội chứng Down."
+  },
+  13: {
+    title: "Vân tay xuất hiện",
+    sizeComparison: "Bằng một quả chanh leo",
+    weight: "~ 23 g",
+    length: "~ 7.4 cm",
+    fruitIcon: "🥔",
+    fruitName: "Quả chanh leo",
+    description: "Tuần cuối cùng của Tam cá nguyệt thứ 1. Dấu vân tay độc nhất vô nhị của bé đã hình thành trên các đầu ngón tay.",
+    babyMilestone: "Nhau thai đã phát triển toàn diện và tiếp quản hoàn toàn nhiệm vụ cung cấp oxy và dưỡng chất từ mẹ sang bé.",
+    momCare: "Chúc mừng mẹ đã vượt qua chặng đường nhạy cảm nhất! Cơn nghén sẽ giảm dần từ tuần tới, mẹ có thể bắt đầu ăn ngon miệng hơn."
+  },
+  14: {
+    title: "Bắt đầu Tam cá nguyệt 2",
+    sizeComparison: "Bằng một quả chanh vàng lớn",
+    weight: "~ 43 g",
+    length: "~ 8.7 cm",
+    fruitIcon: "🍋",
+    fruitName: "Quả chanh vàng",
+    description: "Bé bắt đầu biết nheo mắt, nhăn mặt và có thể mút ngón tay cái của mình. Thận hoạt động đều đặn để bài tiết nước ối.",
+    babyMilestone: "Lông tơ mịn (lanugo) bắt đầu mọc khắp cơ thể để giữ ấm và bảo vệ làn da mỏng dưới nước ối.",
+    momCare: "Nhu cầu canxi của bé bắt đầu tăng cao. Hãy ăn nhiều thực phẩm giàu canxi và bổ sung viên uống theo chỉ định."
+  },
+  15: {
+    title: "Xương bắt đầu cứng cáp",
+    sizeComparison: "Bằng một quả táo ta lớn",
+    weight: "~ 70 g",
+    length: "~ 10 cm",
+    fruitIcon: "🍎",
+    fruitName: "Quả táo ta",
+    description: "Khung xương của bé bắt đầu chuyển hóa từ sụn dẻo thành xương cứng (quá trình cốt hóa). Da của bé lúc này vẫn còn rất mỏng, nhìn rõ các mạch máu bên dưới.",
+    babyMilestone: "Bé bắt đầu thực hiện các động tác hít thở nước ối để luyện cơ phổi nở ra.",
+    momCare: "Nếu thấy nướu (lợi) dễ bị chảy máu khi đánh răng, hãy dùng bàn chải lông mềm và khám nha khoa định kỳ."
+  },
+  16: {
+    title: "Cảm nhận ánh sáng",
+    sizeComparison: "Bằng một quả bơ nhỏ",
+    weight: "~ 100 g",
+    length: "~ 11.6 cm",
+    fruitIcon: "🥑",
+    fruitName: "Quả bơ nhỏ",
+    description: "Mắt của bé mặc dù vẫn nhắm chặt nhưng đã bắt đầu nhạy cảm với ánh sáng mạnh rọi qua thành bụng của mẹ.",
+    babyMilestone: "Đầu của bé đã đứng thẳng hơn so với cơ thể, tai di chuyển về đúng vị trí hai bên đầu.",
+    momCare: "Thích hợp làm xét nghiệm Triple Test (Tuần 15 - 18) nếu trước đó mẹ chưa làm Double Test hay NIPT."
+  },
+  17: {
+    title: "Tích lũy mỡ nâu",
+    sizeComparison: "Bằng một quả lựu",
+    weight: "~ 140 g",
+    length: "~ 13 cm",
+    fruitIcon: "🧅",
+    fruitName: "Quả lựu",
+    description: "Một lớp mỡ đặc biệt (mỡ nâu) bắt đầu tích tụ dưới da của bé, đóng vai trò giữ ấm cơ thể ngay sau khi bé chào đời.",
+    babyMilestone: "Hệ tuần hoàn phát triển mạnh mẽ, tim bé bơm khoảng 25 lít máu mỗi ngày đi khắp cơ thể nhỏ bé.",
+    momCare: "Tránh nằm ngửa khi ngủ. Nên bắt đầu nằm nghiêng sang bên trái để tối ưu dòng máu truyền qua nhau thai."
+  },
+  18: {
+    title: "Bé nghe thấy tiếng mẹ",
+    sizeComparison: "Bằng quả ớt chuông lớn",
+    weight: "~ 190 g",
+    length: "~ 14.2 cm",
+    fruitIcon: "🫑",
+    fruitName: "Quả ớt chuông",
+    description: "Các xương nhỏ trong tai trong đã phát triển hoàn thiện giúp bé bắt đầu nghe thấy âm thanh từ thế giới bên ngoài rõ nét.",
+    babyMilestone: "Bé có thể giật mình hoặc đạp mạnh hơn khi nghe thấy tiếng động lớn đột ngột ngoài môi trường.",
+    momCare: "Bắt đầu trò chuyện, đọc sách hoặc cho bé nghe những giai điệu nhạc êm dịu. Đây là phương pháp thai giáo âm thanh tuyệt vời."
+  },
+  19: {
+    title: "Lớp màng bảo vệ da",
+    sizeComparison: "Bằng quả cà chua lớn",
+    weight: "~ 240 g",
+    length: "~ 15.3 cm",
+    fruitIcon: "🍅",
+    fruitName: "Quả cà chua lớn",
+    description: "Lớp chất gây (vernix caseosa) màu trắng, trơn bóng bao phủ khắp làn da bé để bảo vệ da không bị trầy xước hay nhăn nheo trong nước ối.",
+    babyMilestone: "Các tế bào thần kinh chuyên biệt cho từng giác quan (khứu giác, vị giác, thị giác, thính giác) phát triển chuyên sâu.",
+    momCare: "Cảm giác thèm ăn tăng mạnh. Hãy kiểm soát chất lượng đồ ăn, ưu tiên protein và chất xơ hơn là tinh bột ngọt."
+  },
+  20: {
+    title: "Cột mốc nửa chặng đường",
+    sizeComparison: "Bằng một quả chuối tiêu lớn",
+    weight: "~ 300 g",
+    length: "~ 25.6 cm (Đo từ đầu đến chân)",
+    fruitIcon: "🍌",
+    fruitName: "Quả chuối tiêu",
+    description: "Mẹ đã đi được một nửa hành trình mang thai! Tử cung của mẹ lúc này đã phát triển cao ngang rốn.",
+    babyMilestone: "Mẹ bắt đầu cảm nhận rất rõ các cú máy, đạp, nhào lộn tinh nghịch đầu tiên của bé (thai máy).",
+    momCare: "Thời điểm vàng để thực hiện Siêu âm hình thái học 4D (Tuần 20 - 24) để rà soát toàn bộ cấu trúc cơ thể bé."
+  },
+  21: {
+    title: "Nuốt nước ối đều đặn",
+    sizeComparison: "Bằng một củ cà rốt lớn",
+    weight: "~ 360 g",
+    length: "~ 26.7 cm",
+    fruitIcon: "🥕",
+    fruitName: "Củ cà rốt lớn",
+    description: "Hệ tiêu hóa của bé tiếp tục hoàn thiện thông qua việc nuốt nước ối thường xuyên. Phân su màu xanh đen bắt đầu tích tụ trong ruột bé.",
+    babyMilestone: "Bé bắt đầu có chu kỳ ngủ và thức rõ ràng. Khi bé thức sẽ chuyển động nhiều hơn.",
+    momCare: "Tăng cường uống nước lọc ấm và ăn nhiều rau xanh để phòng ngừa trĩ và táo bón thai kỳ đang gia tăng."
+  },
+  22: {
+    title: "Vị giác hình thành",
+    sizeComparison: "Bằng một quả đu đủ nhỏ",
+    weight: "~ 430 g",
+    length: "~ 27.8 cm",
+    fruitIcon: "🥭",
+    fruitName: "Quả đu đủ nhỏ",
+    description: "Các gai vị giác trên lưỡi của bé đã hình thành đầy đủ. Bé có thể cảm nhận được mùi vị của nước ối (vốn thay đổi theo món ăn của mẹ).",
+    babyMilestone: "Lông mày và mí mắt đã hoàn toàn định hình xong.",
+    momCare: "Mẹ ăn đa dạng các món ăn lành mạnh để bé làm quen với nhiều hương vị khác nhau ngay từ trong bụng mẹ."
+  },
+  23: {
+    title: "Sản sinh chất diện hoạt",
+    sizeComparison: "Bằng một quả bưởi nhỏ",
+    weight: "~ 500 g",
+    length: "~ 28.9 cm",
+    fruitIcon: "🍊",
+    fruitName: "Quả bưởi nhỏ",
+    description: "Phổi của bé bắt đầu sản sinh ra chất diện hoạt (surfactant) - chất giúp các túi phổi không bị xẹp lại khi bé hít thở không khí sau này.",
+    babyMilestone: "Da bé chuyển sang màu đỏ hồng do các mạch máu li ti dưới da phát triển mạnh mẽ.",
+    momCare: "Khi đi xe máy hoặc ô tô, mẹ lưu ý thắt dây an toàn vòng xuống dưới bụng bầu để tránh lực ép vào tử cung."
+  },
+  24: {
+    title: "Cột mốc sống sót tối thiểu",
+    sizeComparison: "Bằng một bắp ngô ngọt lớn",
+    weight: "~ 600 g",
+    length: "~ 30 cm",
+    fruitIcon: "🌽",
+    fruitName: "Bắp ngô ngọt",
+    description: "Mốc phát triển y học tối thiểu. Nếu chẳng may sinh non ở tuần này, em bé đã có cơ hội sống sót nếu được chăm sóc y tế tích cực.",
+    babyMilestone: "Các phế nang phổi bắt đầu hình thành liên tục giúp hệ hô hấp chuẩn bị hoạt động độc lập.",
+    momCare: "Giai đoạn quan trọng để làm xét nghiệm dung nạp đường huyết (Tuần 24 - 28) để tầm soát tiểu đường thai kỳ."
+  },
+  25: {
+    title: "Bé bắt đầu mở mắt",
+    sizeComparison: "Bằng một quả súp lơ xanh",
+    weight: "~ 660 g",
+    length: "~ 34.6 cm",
+    fruitIcon: "🥦",
+    fruitName: "Quả súp lơ xanh",
+    description: "Mắt của bé bắt đầu hé mở và có thể chớp mắt thường xuyên. Cấu trúc cột sống cứng cáp hơn để nâng đỡ cơ thể bé.",
+    babyMilestone: "Hệ thống mạch máu trong phổi phát triển vượt bậc để chuẩn bị cho nhịp thở đầu đời.",
+    momCare: "Nếu mẹ thấy tay chân bị tê bì hoặc đau lưng nhiều, hãy thử tập các bài yoga bầu nhẹ nhàng hoặc massage chuyên biệt."
+  },
+  26: {
+    title: "Sóng não hoạt động mạnh",
+    sizeComparison: "Bằng một quả dưa hấu tí hon",
+    weight: "~ 760 g",
+    length: "~ 35.6 cm",
+    fruitIcon: "🍉",
+    fruitName: "Dưa hấu tí hon",
+    description: "Các dây thần kinh trong tai phát triển hoàn chỉnh hơn giúp bé nhạy cảm và phản ứng linh hoạt với giọng nói của cả bố và mẹ.",
+    babyMilestone: "Sóng não của bé bắt đầu hoạt động mạnh mẽ, ghi nhận hệ thống phản xạ thần kinh ngày một tinh vi.",
+    momCare: "Bố hãy tích cực trò chuyện áp tai vào bụng mẹ để bé quen giọng nói trầm ấm của bố."
+  },
+  27: {
+    title: "Kết thúc Tam cá nguyệt 2",
+    sizeComparison: "Bằng một cây cải bắp lớn",
+    weight: "~ 875 g",
+    length: "~ 36.6 cm",
+    fruitIcon: "🥬",
+    fruitName: "Cải bắp lớn",
+    description: "Tuần cuối cùng của tam cá nguyệt thứ 2. Phổi, gan và hệ thống miễn dịch của bé tiếp tục hoàn thiện các bước cuối.",
+    babyMilestone: "Bé bắt đầu xuất hiện những nhịp nấc cụt thường xuyên do tập hít thở nước ối (mẹ cảm nhận như những nhịp giật nhẹ đều đặn).",
+    momCare: "Mẹ nên đo huyết áp thường xuyên để phát hiện sớm nguy cơ tiền sản giật (nếu có)."
+  },
+  28: {
+    title: "Bắt đầu Tam cá nguyệt 3",
+    sizeComparison: "Bằng một quả dừa",
+    weight: "~ 1 kg",
+    length: "~ 37.6 cm",
+    fruitIcon: "🥥",
+    fruitName: "Quả dừa",
+    description: "Chào mừng mẹ đến với 3 tháng cuối! Bé cưng lúc này đã nặng khoảng 1 kg. Mắt bé có thể nhắm mở và nhìn xung quanh linh hoạt.",
+    babyMilestone: "Lớp lông tơ bắt đầu rụng dần, mỡ dưới da tiếp tục tích tụ nhanh chóng.",
+    momCare: "Cần tăng cường uống viên Sắt và Canxi đầy đủ vì đây là lúc bé hút dưỡng chất từ mẹ mạnh mẽ nhất để bứt phá cân nặng."
+  },
+  29: {
+    title: "Não bộ phát triển bùng nổ",
+    sizeComparison: "Bằng một quả bí ngô nhỏ",
+    weight: "~ 1.15 kg",
+    length: "~ 38.6 cm",
+    fruitIcon: "🎃",
+    fruitName: "Quả bí ngô nhỏ",
+    description: "Bộ não phát triển rất nhanh, bắt đầu xuất hiện các nếp nhăn và rãnh não sâu để tăng diện tích chứa tế bào thần kinh.",
+    babyMilestone: "Bé đã có thể tự điều hòa thân nhiệt ở mức ổn định nhờ sự phát triển của hệ thần kinh trung ương.",
+    momCare: "Bổ sung lượng DHA dồi dào từ cá hồi, trứng và quả óc chó để hỗ trợ quá trình hình thành não bộ của con yêu."
+  },
+  30: {
+    title: "Không gian chật chội",
+    sizeComparison: "Bằng một bắp cải thảo lớn",
+    weight: "~ 1.3 kg",
+    length: "~ 39.9 cm",
+    fruitIcon: "🥬",
+    fruitName: "Bắp cải thảo lớn",
+    description: "Bé đã chiếm phần lớn không gian trong tử cung của mẹ. Lượng nước ối bắt đầu giảm dần nhường chỗ cho em bé lớn lên.",
+    babyMilestone: "Tủy xương đã tiếp quản hoàn toàn nhiệm vụ sản xuất hồng cầu thay cho lá gan và lá lách.",
+    momCare: "Mẹ bắt đầu thấy khó thở nhẹ do tử cung đẩy cơ hoành lên cao. Hãy ngồi thẳng lưng và hít thở sâu."
+  },
+  31: {
+    title: "Xoay đầu chuẩn bị ngôi",
+    sizeComparison: "Bằng một quả dừa xiêm lớn",
+    weight: "~ 1.5 kg",
+    length: "~ 41.1 cm",
+    fruitIcon: "🥥",
+    fruitName: "Quả dừa xiêm lớn",
+    description: "Nhiều em bé bắt đầu xoay đầu xuống phía dưới tử cung (ngôi thuận) để chuẩn bị sẵn tư thế thuận lợi cho kỳ sinh nở sắp tới.",
+    babyMilestone: "Hệ xương khớp phát triển cứng cáp nhưng các xương sọ vẫn giữ cấu trúc mềm dẻo để dễ chui qua đường sinh.",
+    momCare: "Mẹ hãy bắt đầu học cách đếm cử động thai (thai máy) mỗi ngày sau bữa ăn để theo dõi sức khỏe của con."
+  },
+  32: {
+    title: "Da dẻ căng mịn hồng hào",
+    sizeComparison: "Bằng một quả dưa hấu vừa",
+    weight: "~ 1.7 kg",
+    length: "~ 42.4 cm",
+    fruitIcon: "🍉",
+    fruitName: "Quả dưa hấu vừa",
+    description: "Nhờ lớp mỡ dưới da tích tụ đầy đặn, làn da nhăn nheo của bé trước đây nay đã căng mịn, hồng hào và đáng yêu vô cùng.",
+    babyMilestone: "Hệ thần kinh, tiêu hóa và bài tiết của bé hoạt động cực kỳ trơn tru và phối hợp nhịp nhàng.",
+    momCare: "Khám thai đều đặn 2 tuần một lần từ mốc này. Hãy chuẩn bị dần giỏ đồ đi sinh (quần áo, bỉm sữa...)."
+  },
+  33: {
+    title: "Hệ miễn dịch thô sơ",
+    sizeComparison: "Bằng một quả dứa lớn",
+    weight: "~ 1.9 kg",
+    length: "~ 43.7 cm",
+    fruitIcon: "🍍",
+    fruitName: "Quả dứa lớn",
+    description: "Bé bắt đầu nhận được các kháng thể miễn dịch truyền từ máu mẹ qua nhau thai để tự bảo vệ cơ thể khỏi virus, vi khuẩn ngay khi chào đời.",
+    babyMilestone: "Hệ thống miễn dịch thô sơ tự thân của bé bắt đầu tự vận hành nhẹ.",
+    momCare: "Nên tắm nước ấm, ngâm chân nước ấm gừng muối trước khi ngủ để giảm sưng phù chân và chuột rút."
+  },
+  34: {
+    title: "Phổi tiếp tục hoàn thiện",
+    sizeComparison: "Bằng một quả dưa lưới lớn",
+    weight: "~ 2.15 kg",
+    length: "~ 45 cm",
+    fruitIcon: "🍈",
+    fruitName: "Quả dưa lưới lớn",
+    description: "Lớp màng bảo vệ da (gây) ngày một dày hơn. Hệ thống hô hấp và phổi đã hoàn thiện hầu như hoàn toàn.",
+    babyMilestone: "Bé đã có khả năng điều hòa hơi thở nhịp nhàng nếu sinh non ở tuần này mà không cần hỗ trợ máy thở quá nhiều.",
+    momCare: "Nếu mẹ thấy xuất hiện các cơn gò giả (Braxton Hicks) không đau và không đều, hãy ngồi nghỉ ngơi và uống một cốc nước ấm."
+  },
+  35: {
+    title: "Tăng tốc cân nặng",
+    sizeComparison: "Bằng một quả dưa hấu lớn",
+    weight: "~ 2.4 kg",
+    length: "~ 46.2 cm",
+    fruitIcon: "🍉",
+    fruitName: "Quả dưa hấu lớn",
+    description: "Bé tăng trọng lượng rất nhanh trong giai đoạn này (khoảng 200 - 250g mỗi tuần). Không gian tử cung đã quá chật để bé nhào lộn.",
+    babyMilestone: "Thận và gan của bé đã hoàn tất toàn bộ quá trình xử lý chất thải sinh học thô sơ.",
+    momCare: "Hãy hoàn thành hồ sơ sinh tại bệnh viện mẹ dự định sinh nở."
+  },
+  36: {
+    title: "Chuẩn bị tụt xuống khung chậu",
+    sizeComparison: "Bằng một cây đu đủ lớn",
+    weight: "~ 2.6 kg",
+    length: "~ 47.4 cm",
+    fruitIcon: "🥬",
+    fruitName: "Cây đu đủ lớn",
+    description: "Bé cưng bắt đầu tụt dần xuống sâu dưới khung chậu của mẹ (hiện tượng sa bụng bầu). Mẹ sẽ thấy dễ thở hơn nhưng áp lực lên bàng quang tăng mạnh khiến buồn tiểu liên tục.",
+    babyMilestone: "Lông tơ và chất gây trên da bắt đầu bong ra, lẫn vào nước ối và được bé nuốt vào tạo thành phân su.",
+    momCare: "Khám thai 1 tuần/lần từ mốc này. Làm xét nghiệm liên cầu khuẩn nhóm B (GBS) để bảo vệ bé khi sinh thường."
+  },
+  37: {
+    title: "Thai nhi chính thức 'Đủ tháng'",
+    sizeComparison: "Bằng một quả mít vừa",
+    weight: "~ 2.85 kg",
+    length: "~ 48.6 cm",
+    fruitIcon: "🍈",
+    fruitName: "Quả mít vừa",
+    description: "Chúc mừng mẹ! Từ tuần này, em bé được coi là đã phát triển đủ tháng (Early Term). Bé đã hoàn toàn sẵn sàng cho cuộc sống bên ngoài tử cung.",
+    babyMilestone: "Hệ thống phổi đã tự sản xuất hoàn toàn đủ chất diện hoạt để tự thở không khí ngoài trời.",
+    momCare: "Theo dõi sát sao các dấu hiệu chuyển dạ thực sự: rỉ ối, vỡ ối, ra dịch hồng âm đạo hoặc gò tử cung đau đều đặn."
+  },
+  38: {
+    title: "Tiêu thụ chất béo",
+    sizeComparison: "Bằng một quả mít lớn",
+    weight: "~ 3.1 kg",
+    length: "~ 49.8 cm",
+    fruitIcon: "🍈",
+    fruitName: "Quả mít lớn",
+    description: "Các lớp mỡ tiếp tục được tích lũy để giúp bé duy trì thân nhiệt. Vòng đầu của bé hiện tại có kích thước gần tương đương với vòng bụng.",
+    babyMilestone: "Phản xạ cầm nắm của bé cực kỳ mạnh mẽ, hai tay đã có thể nắm chặt.",
+    momCare: "Chuẩn bị sẵn sàng tinh thần, kiểm tra lại giấy tờ tùy thân, bảo hiểm và số điện thoại của bác sĩ/bệnh viện."
+  },
+  39: {
+    title: "Sẵn sàng chào đời",
+    sizeComparison: "Bằng một quả dưa hấu khổng lồ",
+    weight: "~ 3.3 kg",
+    length: "~ 50.7 cm",
+    fruitIcon: "🍉",
+    fruitName: "Dưa hấu khổng lồ",
+    description: "Bé cưng đã tích lũy đủ cân nặng tiêu chuẩn ($3.0 - 3.4\\text{ kg}$). Mọi cơ quan nội tạng đã ở trạng thái tối ưu nhất chờ ngày chào đời.",
+    babyMilestone: "Lớp da bên ngoài liên tục được tái tạo tế bào mới khỏe mạnh.",
+    momCare: "Mẹ có thể đi bộ nhẹ nhàng quanh nhà để giúp cổ tử cung mở thuận lợi hơn."
+  },
+  40: {
+    title: "Ngày dự sinh hạnh phúc",
+    sizeComparison: "Kích thước hoàn hảo của em bé sơ sinh",
+    weight: "3.2 - 3.5 kg",
+    length: "50 - 52 cm",
+    fruitIcon: "👶",
+    fruitName: "Em bé sơ sinh hoàn chỉnh",
+    description: "Mốc 40 tuần thai kỳ viên mãn. Bé yêu sẽ sớm cất tiếng khóc chào đời để ôm lấy mẹ. Hãy tự hào vì mẹ đã hoàn thành xuất sắc hành trình 280 ngày kỳ diệu!",
+    babyMilestone: "Bé cưng thức tỉnh, hệ tuần hoàn tự đóng các ống tim thai cũ để chuyển sang nhịp thở phổi hoàn chỉnh ngay khi chào đời.",
+    momCare: "Hãy thả lỏng tinh thần, hít thở đều đặn theo hướng dẫn của hộ sinh và bác sĩ. Mẹ sắp được gặp thiên thần nhỏ rồi!"
+  }
+};
+
+// --- DATA: MENUS FOR 3 TRIMESTERS ---
+const TRIDATA = {
+  1: {
+    name: "Tam Cá Nguyệt 1 (Tuần 1 - 13)",
+    subtitle: "Xây dựng nền móng & Chống nghén hiệu quả",
+    color: "emerald",
+    bgClass: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    accentBg: "bg-emerald-600",
+    hoverBg: "hover:bg-emerald-700",
+    activeTab: "bg-emerald-100 text-emerald-800 border-emerald-300",
+    keyNutrients: [
+      { name: "Acid Folic", target: "400 - 600\\ \\mu\\text{g}/ngày", role: "Phòng ngừa dị tật ống thần kinh thai nhi." },
+      { name: "Sắt", target: "30\\ text{mg}/ngày", role: "Tăng tạo máu để nuôi dưỡng phôi thai." },
+      { name: "Vitamin B6", target: "1.9\\ text{mg}/ngày", role: "Hỗ trợ giảm thiểu các cơn nghén, buồn nôn dạ dày." }
+    ],
+    guideline: "Giai đoạn này thai nhi còn rất nhỏ, mẹ chưa cần tăng quá nhiều calo (chỉ cần ăn như bình thường nhưng bổ sung đủ vi chất). Ưu tiên các món thanh đạm, chia nhỏ bữa ăn thành 5-6 bữa để giảm cảm giác ốm nghén.",
+    days: {
+      "Thứ 2": [
+        { meal: "Bữa sáng (7:00)", main: "Phở bò chín nóng", alt: "Cháo thịt gà gừng băm", note: "Thêm lát chanh tươi giúp dễ chịu dạ dày, thịt bò bổ sung sắt dồi dào." },
+        { meal: "Bữa phụ sáng (9:30)", main: "1 quả cam tươi + 1 nắm hạt điều (30g)", alt: "1 quả táo xanh + hạt hạnh nhân", note: "Bổ sung Vitamin C giúp hấp thụ sắt tối ưu." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm gạo lứt + Thịt heo kho gừng + Canh rau cải bẹ xanh nấu thịt bằm", alt: "Cơm trắng + Gà kho gừng nhẹ + Canh mồng tơi", note: "Gừng hỗ trợ giảm nghén; rau cải xanh chứa dồi dào folate tự nhiên." },
+        { meal: "Bữa phụ chiều (15:00)", main: "Sữa chua ít đường + Hạt chia", alt: "Sữa tươi tiệt trùng + Bánh quy lạt", note: "Bổ sung lợi khuẩn đường ruột, giảm táo bón thai kỳ đầu." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Đậu hũ nhồi thịt hấp + Canh rau ngót nấu mọc (chỉ dùng rau chín kỹ)", alt: "Cơm + Trứng đúc thịt + Canh mướp hương", note: "Hạn chế đồ chiên xào nhiều dầu mỡ vào buổi tối để tránh đầy bụng." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa ấm tiệt trùng", alt: "Nước ấm mật ong gừng nhẹ", note: "Giúp ngủ ngon hơn, hạn chế đói nửa đêm gây buồn nôn sáng hôm sau." }
+      ],
+      "Thứ 3": [
+        { meal: "Bữa sáng (7:00)", main: "Cháo sườn heo nấu yến mạch + hành hoa", alt: "Súp gà ngô non nấm rơm", note: "Yến mạch dễ tiêu hóa và giàu chất xơ hòa tan." },
+        { meal: "Bữa phụ sáng (9:30)", main: "1 ly nước ép bưởi hồng ít đường", alt: "Sinh tố dâu tây chuối (không đá)", note: "Giàu vitamin nhóm B và chất chống oxy hóa bảo vệ tế bào." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Tôm rim lạt + Canh bí đao nấu sườn non", alt: "Cơm + Thịt kho tàu ít mỡ + Canh cải cúc", note: "Tôm cung cấp kẽm và protein dễ hấp thụ." },
+        { meal: "Bữa phụ chiều (15:00)", main: "1 quả chuối sứ chín + bánh quy lạt", alt: "Nho khô + 1 cốc trà gừng ấm", note: "Chuối rất giàu Kali và Vitamin B6 giảm ốm nghén cực tốt." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Trứng chiên hành tây + Canh cà chua thịt bằm", alt: "Cơm + Chả lụa chưng thịt + Canh rau má", note: "Trứng là nguồn choline tuyệt vời cho não bộ thai nhi sơ khai." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa hạt (đậu nành/hạt sen) ấm", alt: "Sữa chua uống tiệt trùng", note: "Bổ sung lượng canxi nhẹ nhàng trước khi ngủ." }
+      ],
+      "Thứ 4": [
+        { meal: "Bữa sáng (7:00)", main: "Bánh mì sandwich kẹp trứng chín kỹ và xà lách sạch", alt: "Xôi đậu xanh ruốc thịt", note: "Đảm bảo trứng được chiên chín hoàn toàn (loại bỏ nguy cơ nhiễm Salmonella)." },
+        { meal: "Bữa phụ sáng (9:30)", main: "Kiwis vàng (2 quả) + hạt bí ngô", alt: "Hồng xiêm chín + hạt hướng dương", note: "Kiwi chứa hàm lượng folate và vitamin C vô cùng lý tưởng." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Bò lúc lắc hành tây ớt chuông + Canh khoai tây cà rốt", alt: "Cơm + Sườn xào chua ngọt + Canh rau muống luộc", note: "Ớt chuông giàu vitamin C giúp tăng cường hấp thụ chất sắt từ thịt bò." },
+        { meal: "Bữa phụ chiều (15:00)", main: "Bánh quy yến mạch + trà hoa cúc ấm", alt: "Nước chanh mật ong ấm", note: "Bữa phụ dịu nhẹ giúp duy trì đường huyết ổn định." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Thịt gà kho sả + Canh cải thảo nấu tôm khô", alt: "Cơm + Chả cá thác lác hấp + Canh bí đỏ", note: "Sả thơm dịu kích thích vị giác của mẹ khi chán ăn." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa tươi tiệt trùng ấm", alt: "Sữa ngũ cốc", note: "Lấp đầy dạ dày nhẹ nhàng chống trào ngược axit đêm." }
+      ],
+      "Thứ 5": [
+        { meal: "Bữa sáng (7:00)", main: "Nui nấu thịt nạc bằm và cà rốt", alt: "Phở gà nước trong hành chín", note: "Nước dùng thanh đạm, ít béo giúp mẹ dễ ăn buổi sáng." },
+        { meal: "Bữa phụ sáng (9:30)", main: "Nước cam vắt ấm + hạt óc chó", alt: "Ổi chín bỏ ruột + hạt điều", note: "Quả óc chó rất tốt cho sự phát triển sớm của hệ thần kinh." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Đậu hũ sốt cà chua + Canh súp lơ xanh nấu thịt nạc", alt: "Cơm + Thịt rim cháy cạnh + Canh rau dền", note: "Súp lơ xanh giàu folate và sắt, rất cần thiết trong 3 tháng đầu." },
+        { meal: "Bữa phụ chiều (15:00)", main: "Sữa chua không đường + việt quất", alt: "Nước đậu đen rang ấm", note: "Thanh nhiệt và chống táo bón hiệu quả." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Thịt nạc vai luộc + Canh mướp đắng nhồi thịt chín kỹ", alt: "Cơm + Gà rang lá chanh + Canh rau lang", note: "Món luộc nhẹ bụng giúp mẹ không bị khó tiêu buổi tối." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa nghệ ấm uống nhẹ", alt: "Sữa bầu ấm pha loãng", note: "Nghệ giúp dịu dạ dày bị kích thích do nghén." }
+      ],
+      "Thứ 6": [
+        { meal: "Bữa sáng (7:00)", main: "Súp măng tây thịt cua nấu chín kỹ", alt: "Bánh giò nóng ít mỡ", note: "Măng tây là 'vua' của các loại rau giàu Acid Folic." },
+        { meal: "Bữa phụ sáng (9:30)", main: "1 quả lê chín ngọt + hạt điều", alt: "Nước dừa tươi (chỉ uống lượng vừa phải từ tuần 12 trở đi)", note: "Lê cung cấp nước và chất xơ tự nhiên dồi dào." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Cá diêu hồng chưng tương gừng + Canh rau dền đỏ nấu tôm", alt: "Cơm + Tôm xào bông hẹ + Canh mướp", note: "Cá diêu hồng là nguồn đạm lành tính, không chứa thủy ngân cao." },
+        { meal: "Bữa phụ chiều (15:00)", main: "Khoai lang mật hấp chín", alt: "Bắp ngô ngọt luộc", note: "Khoai lang giàu beta-carotene và xơ chống táo bón xuất sắc." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Sườn rim dứa (thơm) chín kỹ + Canh bí xanh nấu mọc", alt: "Cơm + Thịt đúc nấm + Canh bắp cải", note: "Dứa nấu chín kỹ giúp kích thích tiêu hóa và an toàn cho thai kỳ." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa tươi tiệt trùng", alt: "Sữa hạt sen mật ong", note: "Hạt sen giúp mẹ thư giãn thần kinh, dễ đi vào giấc ngủ sâu." }
+      ],
+      "Thứ 7": [
+        { meal: "Bữa sáng (7:00)", main: "Hủ tiếu Nam Vang nạc heo (bỏ lòng heo)", alt: "Bánh cuốn nóng chả lụa", note: "Tránh các loại nội tạng động vật trong 3 tháng đầu để ngừa dư thừa Vitamin A liều cao." },
+        { meal: "Bữa phụ sáng (9:30)", main: "Sinh tố bơ sữa tươi tiệt trùng", alt: "1 quả xoài chín ngọt vừa", note: "Quả bơ giàu chất béo tốt không bão hòa và folate tự nhiên." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Thịt bò xào măng tây + Canh cải xoong nấu thịt bằm", alt: "Cơm + Gà hấp hành + Canh bầu nấu tôm", note: "Măng tây kết hợp bò tạo nên combo bổ máu cực tốt." },
+        { meal: "Bữa phụ chiều (15:00)", main: "Sữa chua ít béo + dâu tây cắt lát", alt: "Hạt hạnh nhân + Trà gừng sả", note: "Dâu tây giàu vitamin C tăng đề kháng tự nhiên." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Cá lóc kho tộ + Canh bí đỏ nấu xương", alt: "Cơm + Trứng chiên hẹ + Canh bắp cải nấu tôm", note: "Cá lóc lành tính, giàu protein hỗ trợ hình thành tế bào thai nhi." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa bầu ấm", alt: "Nước ấm mật ong", note: "Hỗ trợ cung cấp đa vi chất đầy đủ trước giấc ngủ dài." }
+      ],
+      "Chủ Nhật": [
+        { meal: "Bữa sáng (7:00)", main: "Bánh mì sốt vang bò mềm", alt: "Bún mọc sườn heo nước trong", note: "Bò sốt vang ninh nhừ dễ tiêu hóa, cực giàu sắt." },
+        { meal: "Bữa phụ sáng (9:30)", main: "Dưa lưới ngọt thanh + hạt hướng dương", alt: "Nước ép táo lê", note: "Dưa lưới bổ sung nước và vitamin vô cùng thanh mát." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Gà hấp lá chanh + Canh mướp hương nấu lòng gà (chín kỹ)", alt: "Cơm + Đậu hũ nhồi thịt rán + Canh rau dền", note: "Gà ta hấp thơm bùi bổ sung protein chất lượng cao." },
+        { meal: "Bữa phụ chiều (15:00)", main: "1 quả ngô luộc hoặc khoai lang hấp", alt: "Yến sào chưng đường phèn hạt sen", note: "Yến sào nâng cao thể trạng, bồi bổ sức khỏe cho mẹ mệt mỏi." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Tôm xào bông cải xanh + Canh mồng tơi nấu thịt", alt: "Cơm + Bò xào hành tây + Canh bí đao", note: "Bông cải và tôm là nguồn dưỡng chất kép tuyệt vời cho mẹ bầu." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa tươi ấm", alt: "Sữa chua uống ngọt nhẹ", note: "Đảm bảo mẹ bầu không bị hạ đường huyết lúc nửa đêm." }
+      ]
+    }
+  },
+  2: {
+    name: "Tam Cá Nguyệt 2 (Tuần 14 - 27)",
+    subtitle: "Phát triển khung xương & Tăng trưởng thần tốc",
+    color: "pink",
+    bgClass: "bg-pink-50 text-pink-700 border-pink-200",
+    accentBg: "bg-pink-600",
+    hoverBg: "hover:bg-pink-700",
+    activeTab: "bg-pink-100 text-pink-800 border-pink-300",
+    keyNutrients: [
+      { name: "Canxi", target: "1000 - 1200\\ text{mg}/ngày", role: "Hình thành và phát triển hệ xương, răng của bé; tránh loãng xương cho mẹ." },
+      { name: "Sắt & Vitamin C", target: "30\\ text{mg}\\ \\text{Sắt}/ngày", role: "Tăng thể tích máu thêm $50\\%$ để nuôi thai." },
+      { name: "Protein", target: "Tăng thêm\\ +15\\ text{g}/ngày", role: "Xây dựng các cơ quan và khối cơ cốt lõi của thai nhi." }
+    ],
+    guideline: "Giai đoạn này mẹ đã hết nghén, em bé lớn nhanh như thổi. Mẹ cần nạp thêm năng lượng (+250 kcal/ngày). Cần bổ sung tối đa canxi và sắt thông qua các thực phẩm giàu sữa, cua đồng, cá nhỏ ăn cả xương, các loại thịt đỏ và rau đậm màu.",
+    days: {
+      "Thứ 2": [
+        { meal: "Bữa sáng (7:00)", main: "Bún riêu cua đồng chín kỹ (bổ sung đậu hũ)", alt: "Phở bò chín tái vừa", note: "Cua đồng giã nhỏ chứa lượng canxi hữu cơ cực kỳ khổng lồ." },
+        { meal: "Bữa phụ sáng (9:30)", main: "1 ly sữa bầu pha chuẩn + 1 quả táo", alt: "Sữa chua phô mai hạt chia", note: "Sữa bầu bổ sung canxi toàn diện cùng các vitamin nhóm D." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Thịt kho tàu + Bông cải xanh luộc + Canh cua nấu mồng tơi", alt: "Cơm + Đậu hũ nhồi thịt + Canh rau ngót", note: "Sự kết hợp giữa cua đồng và bông cải xanh mang lại lượng canxi và sắt tối ưu." },
+        { meal: "Bữa phụ chiều (15:00)", main: "Phô mai miếng (1-2 lát) + Bánh mì đen", alt: "Sữa hạt Macca + bánh quy ngũ cốc", note: "Phô mai là nguồn canxi cô đặc, cực kỳ thích hợp cho tam cá nguyệt 2." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Bò xào cần tỏi + Canh sườn non nấu khoai tây cà rốt", alt: "Cơm + Thịt rim cháy cạnh + Canh rau dền đỏ", note: "Bò xào cần tỏi giàu sắt, kẽm kích thích hồng cầu phát triển." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa tươi tiệt trùng ấm + vài hạt óc chó", alt: "Sữa đậu nành tự nấu ấm", note: "Duy trì canxi liên tục trong giấc ngủ để tránh chuột rút ban đêm." }
+      ],
+      "Thứ 3": [
+        { meal: "Bữa sáng (7:00)", main: "Bánh mì ốp la kép phô mai chín kỹ + Sữa đậu nành", alt: "Cháo sườn non yến mạch", note: "Trứng kết hợp phô mai tăng cường đạm và canxi tức thì." },
+        { meal: "Bữa phụ sáng (9:30)", main: "Hạt điều (30g) + 1 cốc nước ép ổi vắt", alt: "Kiwi vàng + sữa chua", note: "Nước ổi dồi dào Vitamin C giúp thúc đẩy cơ thể hấp thu sắt từ thức ăn." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Tôm súp rim thịt nạc + Canh bí đỏ nấu xương hầm", alt: "Cơm + Gà kho nấm đông cô + Canh bầu", note: "Tôm sú nguyên vỏ chứa lượng canxi dồi dào, tốt cho xương khớp." },
+        { meal: "Bữa phụ chiều (15:00)", main: "1 hũ bánh flan tự làm ngọt nhẹ + dâu tây", alt: "Chuối tiêu chín + Sữa tươi", note: "Bánh flan làm từ trứng và sữa giàu dinh dưỡng và dễ ăn." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Cá lóc kho tộ + Canh bí đao nấu thịt bằm + Đĩa rau luộc thập cẩm", alt: "Cơm + Đậu phụ nhồi thịt + Canh xà lách xoong", note: "Rau cải xoong luộc hoặc canh dồi dào sắt và chất xơ." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa ấm + hạt hạnh nhân", alt: "Sữa bầu ấm", note: "Hạnh nhân chứa canxi và vitamin E làm đẹp da cho mẹ bầu." }
+      ],
+      "Thứ 4": [
+        { meal: "Bữa sáng (7:00)", main: "Phở gà ta đùi + đĩa giá đỗ chần chín kỹ", alt: "Bún mọc sườn heo nước trong", note: "Giá đỗ chứa kẽm và phytoestrogen tự nhiên rất tốt." },
+        { meal: "Bữa phụ sáng (9:30)", main: "1 ly sinh tố bơ hạt chia", alt: "Đu đủ chín ngọt + sữa chua", note: "Đu đủ chín chứa vitamin A, C tốt cho mắt của bé (tránh đu đủ xanh)." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Thịt bò xào thiên lý + Canh mướp hương nấu tôm đất", alt: "Cơm + Trứng đúc thịt + Canh rau dền đỏ", note: "Hoa thiên lý có tác dụng an thần, ngủ ngon và chống nóng trong." },
+        { meal: "Bữa phụ chiều (15:00)", main: "Sữa chua nếp cẩm ít đường", alt: "1 quả ngô nếp luộc + Sữa tươi", note: "Nếp cẩm chứa sắt và chất chống oxy hóa lành mạnh." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Gà rang lá chanh + Canh rau ngót nấu thịt bằm", alt: "Cơm + Cá chép om dưa + Canh mướp", note: "Rau ngót chứa nhiều sắt, canxi và các vitamin nhóm B." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa tươi tiệt trùng ấm", alt: "Sữa ngũ cốc yến mạch", note: "Đảm bảo mẹ không bị cồn cào ruột khi đi ngủ." }
+      ],
+      "Thứ 5": [
+        { meal: "Bữa sáng (7:00)", main: "Xôi xéo đậu xanh thịt kho tàu chả lụa", alt: "Bánh mì pate trứng chín kỹ", note: "Đậu xanh cung cấp đạm thực vật dồi dào." },
+        { meal: "Bữa phụ sáng (9:30)", main: "1 ly nước cam mật ong + hạt hạnh nhân", alt: "Nho tươi + phô mai miếng", note: "Tăng đề kháng toàn diện cho mẹ bầu." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Cá hồi kho tộ + Canh bắp cải nấu thịt băm + Salad dưa chuột", alt: "Cơm + Sườn rim + Canh cải xoong", note: "Cá hồi cung cấp Omega-3 (DHA/EPA) cho sự phát triển não bộ." },
+        { meal: "Bữa phụ chiều (15:00)", main: "Khoai lang hấp chín + 1 ly sữa hạt sen", alt: "Bánh bông lan trứng muối ngọt nhẹ", note: "Khoai lang hỗ trợ hệ tiêu hóa của mẹ hoạt động trơn tru." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Đậu hũ nhồi thịt rán sốt cà + Canh cua nấu rau dền", alt: "Cơm + Bò sốt tiêu đen + Canh súp lơ", note: "Cua nấu rau dền đỏ tạo màu sắc ngon mắt và bổ sung canxi tối đa." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa bầu ấm + 2 quả óc chó", alt: "Sữa tươi ấm", note: "Chuẩn bị dưỡng chất đầy đủ cho em bé hấp thu qua đêm." }
+      ],
+      "Thứ 6": [
+        { meal: "Bữa sáng (7:00)", main: "Hủ tiếu mì sườn heo chín mềm", alt: "Bánh cuốn thịt nướng chín kỹ", note: "Nước dùng xương hầm cung cấp vị ngọt thanh dễ ăn." },
+        { meal: "Bữa phụ sáng (9:30)", main: "Sinh tố xoài chuối + hạt chia", alt: "Ổi chín + Sữa chua phô mai", note: "Hạt chia dồi dào Omega-3 thực vật và chất xơ." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Thịt chân giò heo luộc chấm mắm tỏi + Canh cải ngọt nấu tôm", alt: "Cơm + Cá thu sốt cà + Canh bí đao", note: "Cải ngọt giàu vitamin K và canxi thực vật." },
+        { meal: "Bữa phụ chiều (15:00)", main: "Yến sào chưng táo đỏ hạt sen", alt: "Súp gà hạt sen", note: "Táo đỏ và hạt sen giúp mẹ giảm căng thẳng thần kinh." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Tôm rim tỏi ớt chuông + Canh rau muống luộc lấy nước vắt chanh", alt: "Cơm + Thịt kho trứng + Canh cải thảo", note: "Nước rau muống dầm sấu hoặc chanh giàu vitamin C thanh nhiệt." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa tươi tiệt trùng ấm", alt: "Sữa ấm mật ong nhẹ", note: "Duy trì giấc ngủ sâu và êm dịu." }
+      ],
+      "Thứ 7": [
+        { meal: "Bữa sáng (7:00)", main: "Bánh canh cua bột lọc nóng hổi", alt: "Nui xào bò chín kỹ", note: "Bánh canh cua giàu dưỡng chất, dễ tiêu hóa cho bữa sáng cuối tuần." },
+        { meal: "Bữa phụ sáng (9:30)", main: "Hồng xiêm chín + hạt dẻ cười", alt: "Nước ép cam táo + hạt điều", note: "Hạt dẻ cười giàu chất béo tốt và vitamin B6." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Sườn non kho tiêu + Canh cải xoong thịt băm", alt: "Cơm + Gà xào sả ớt + Canh bí đỏ", note: "Cải xoong cực kỳ bổ máu cho phụ nữ mang thai." },
+        { meal: "Bữa phụ chiều (15:00)", main: "1 cốc chè đỗ xanh hạt sen ít đường", alt: "Bánh flan + Sữa chua uống", note: "Đỗ xanh thanh nhiệt, giải độc cơ thể rất tốt." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Bò né bông thiên lý + Canh cua mồng tơi rau đay", alt: "Cơm + Tôm nướng muối ớt + Canh mướp", note: "Món xào thơm lừng từ thịt bò mềm ngọt kết hợp thiên lý." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa bầu ấm", alt: "Sữa đậu nành ấm", note: "Bảo vệ hệ xương khớp của mẹ bầu tối đa." }
+      ],
+      "Chủ Nhật": [
+        { meal: "Bữa sáng (7:00)", main: "Bún bò Huế tái chín đầy đủ giò heo", alt: "Bánh mì bò kho", note: "Cung cấp năng lượng dồi dào bắt đầu ngày chủ nhật vui vẻ." },
+        { meal: "Bữa phụ sáng (9:30)", main: "1 đĩa dâu tây ngọt mát + hạnh nhân", alt: "Sinh tố việt quất sữa chua", note: "Dâu tây giàu chất chống oxy hóa bảo vệ nhau thai." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Cá thu sốt cà chua thơm ngọt + Canh mướp đắng nhồi thịt", alt: "Cơm + Gà luộc + Canh khoai tây sườn", note: "Cá thu nhỏ giàu omega-3 lành mạnh cho trí não bé." },
+        { meal: "Bữa phụ chiều (15:00)", main: "1 ly sữa ngũ cốc yến mạch ấm", alt: "Khoai tây hấp lò vi sóng + bơ thực vật", note: "Cung cấp năng lượng sạch từ tinh bột phức tạp." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Gà hấp nấm + Canh rong biển thịt bò băm", alt: "Cơm + Mực nhồi thịt sốt cà + Canh cải thảo", note: "Canh rong biển dồi dào canxi, i-ốt và khoáng chất tự nhiên cực quý." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa tươi tiệt trùng ấm + vài hạt óc chó", alt: "Sữa hạt điều sen", note: "Kích thích giấc ngủ sinh lý êm ái cho mẹ." }
+      ]
+    }
+  },
+  3: {
+    name: "Tam Cá Nguyệt 3 (Tuần 28 - 40)",
+    subtitle: "Tích lũy mỡ, hoàn thiện não bộ & Chuẩn bị sinh",
+    color: "amber",
+    bgClass: "bg-amber-50 text-amber-700 border-amber-200",
+    accentBg: "bg-amber-600",
+    hoverBg: "hover:bg-amber-700",
+    activeTab: "bg-amber-100 text-amber-800 border-amber-300",
+    keyNutrients: [
+      { name: "DHA / EPA", target: "200 - 300\\ text{mg}/ngày", role: "Đóng vai trò quyết định trong việc hình thành vỏ não và thị giác của bé." },
+      { name: "Chất xơ & Nước", target: "28\\ text{g}\\ \\text{Chất xơ} + 2.5\\text{L}\\ \\text{Nước}", role: "Ngừa táo bón nặng do áp lực tử cung đè nén lên trực tràng." },
+      { name: "Năng lượng", target: "Tăng thêm\\ +450\\ text{kcal}/ngày", role: "Đảm bảo cân nặng của em bé đạt chuẩn khi chào đời ($3.0 - 3.5\\text{ kg}$)." }
+    ],
+    guideline: "Bụng bầu đã rất to, chèn ép dạ dày khiến mẹ nhanh no nhưng cũng nhanh đói. Hãy chia nhỏ bữa ăn hơn nữa. Ưu tiên chất béo tốt từ cá hồi, bơ, các loại hạt để phát triển não bộ thai nhi nhanh chóng, uống nhiều nước ấm để tránh cạn ối.",
+    days: {
+      "Thứ 2": [
+        { meal: "Bữa sáng (7:00)", main: "Phở gà ta (nước trong, bỏ da)", alt: "Cháo cá chép nấu hành", note: "Cá chép là món ăn dưỡng thai, an thai cực kỳ nổi tiếng theo Đông y." },
+        { meal: "Bữa phụ sáng (9:30)", main: "1 ly sữa bầu ấm + 3 quả óc chó", alt: "Sữa chua hạt Macca", note: "Óc chó chứa lượng Omega-3 đứng đầu trong các loại hạt." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm gạo lứt + Cá hồi áp chảo sốt bơ tỏi + Súp lơ luộc + Canh rong biển", alt: "Cơm + Tôm rim mặn + Canh cải cúc", note: "Cá hồi là nguồn cung cấp DHA tự nhiên tốt nhất cho trí não bé." },
+        { meal: "Bữa phụ chiều (15:00)", main: "1/2 quả bơ dầm sữa đặc ngọt nhẹ (hoặc sữa tươi)", alt: "Khoai lang mật nướng", note: "Quả bơ giàu chất béo tốt hỗ trợ hấp thu vitamin hòa tan trong mỡ." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Bò xào hành tây bông cải + Canh cải thảo nấu thịt bằm", alt: "Cơm + Thịt gà kho sả + Canh bí đỏ", note: "Hành tây và bông cải dồi dào kali ngăn ngừa hiện tượng phù chân." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa ấm + bánh quy lạt nguyên cám", alt: "Trà hoa cúc mật ong ấm", note: "Tránh đói đêm khiến mẹ khó chịu, mất ngủ." }
+      ],
+      "Thứ 3": [
+        { meal: "Bữa sáng (7:00)", main: "Cháo thịt bò băm nấu hạt sen", alt: "Súp hải sản thập cẩm nóng", note: "Hạt sen an thần giúp mẹ giảm bớt lo âu giai đoạn sắp sinh." },
+        { meal: "Bữa phụ sáng (9:30)", main: "1 ly sữa tươi tiệt trùng + 1 quả táo đỏ sấy", alt: "Nho khô + Sữa đậu nành", note: "Sữa tươi bổ sung canxi liên tục chống loãng xương cho mẹ." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Tôm sú nướng muối ớt + Canh cua rau đay mồng tơi", alt: "Cơm + Đậu hũ sốt cà + Canh bí xanh nấu xương", note: "Rau đay nhiều chất nhớt tự nhiên giúp nhuận tràng cực tốt." },
+        { meal: "Bữa phụ chiều (15:00)", main: "1 hũ sữa chua ít đường + dâu tây chín ngọt", alt: "Sinh tố đu đủ chín", note: "Probiotics từ sữa chua hỗ trợ hệ vi sinh đường ruột khỏe mạnh." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Thịt ba chỉ heo rim cháy cạnh + Canh bầu nấu tôm đất", alt: "Cơm + Trứng chiên hẹ + Canh bắp cải", note: "Canh bầu ngọt mát, giải nhiệt cho mẹ bầu cuối thai kỳ." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa bầu ấm", alt: "Nước hạt sen đường phèn ấm", note: "Hỗ trợ tối đa năng lượng tích lũy cho bé phát triển nhanh." }
+      ],
+      "Thứ 4": [
+        { meal: "Bữa sáng (7:00)", main: "Nui xào thịt bò băm + xà lách bông cải chín", alt: "Bánh canh sườn chả lụa", note: "Nui chứa tinh bột hấp thu chậm, giữ mức đường huyết ổn định." },
+        { meal: "Bữa phụ sáng (9:30)", main: "Nước ép cam sành vắt ấm + hạt hướng dương", alt: "Ổi chín gọt vỏ bỏ hạt + hạnh nhân", note: "Bổ sung lượng nước và vitamin C hỗ trợ thành mạch máu vững chắc." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Cá diêu hồng hấp gừng hành + Canh rau dền thịt bằm", alt: "Cơm + Sườn xào chua ngọt + Canh rau muống", note: "Cá hấp giữ trọn vẹn chất dinh dưỡng và rất dễ tiêu hóa." },
+        { meal: "Bữa phụ chiều (15:00)", main: "1 củ khoai lang luộc + sữa đậu nành", alt: "Bắp luộc ngọt", note: "Khoai lang là giải pháp tự nhiên hàng đầu cho táo bón cuối thai kỳ." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Gà luộc chấm muối tiêu chanh + Canh mướp hương nấu lòng mề gà chín kỹ", alt: "Cơm + Thịt kho tàu ít mỡ + Canh bí đỏ", note: "Gà luộc cung cấp nguồn protein trắng chất lượng cao, ít chất béo xấu." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa tươi ấm tiệt trùng", alt: "Yến chưng hạt sen đường phèn", note: "Tăng cường thể trạng tối ưu trước ngày lâm bồn." }
+      ],
+      "Thứ 5": [
+        { meal: "Bữa sáng (7:00)", main: "Bánh mì kẹp trứng chiên phô mai + 1 ly sữa tươi", alt: "Bún thang gà nước trong", note: "Trứng cung cấp protein dồi dào cho sự bứt phá cân nặng của thai nhi." },
+        { meal: "Bữa phụ sáng (9:30)", main: "Quả kiwi vàng (2 quả) + hạt bí ngô", alt: "Nước dừa tươi ngọt vừa (tuần 1 ly)", note: "Kiwi hỗ trợ hệ tiêu hóa của mẹ bầu nhờ chứa enzyme actinidin." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Thịt bò sốt tiêu đen nấu chín mềm + Canh súp lơ xanh nấu tôm", alt: "Cơm + Đậu phụ hấp trứng thịt + Canh mồng tơi", note: "Thịt bò giúp tăng lượng huyết sắc tố hemoglobin cho kỳ sinh nở sắp tới." },
+        { meal: "Bữa phụ chiều (15:00)", main: "Sữa chua phô mai mềm + hạt điều", alt: "1 quả chuối + ly sữa ấm", note: "Canxi và protein từ phô mai bổ sung trực tiếp cho khung xương bé." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Cá hồi sốt chanh leo ngọt dịu + Canh cải thảo nấu mọc sườn", alt: "Cơm + Thịt viên sốt cà + Canh bí xanh", note: "Cá hồi và chanh leo kích thích tiêu hóa, giàu Omega-3 vượt trội." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa bầu ấm", alt: "Nước ấm mật ong gừng nhẹ", note: "Đảm bảo năng lượng dồi dào cả đêm dài." }
+      ],
+      "Thứ 6": [
+        { meal: "Bữa sáng (7:00)", main: "Bột yến mạch sữa tươi trộn hạt dẻ và hoa quả khô", alt: "Súp tôm ngô ngọt nấm tuyết", note: "Bữa sáng chuẩn phương Tây siêu nhanh, giàu chất xơ và năng lượng sạch." },
+        { meal: "Bữa phụ sáng (9:30)", main: "Nước bưởi ép mật ong ấm + hạt Macca", alt: "Dưa lưới mát ngọt", note: "Hạt macca chứa nhiều acid béo thiết yếu cho vỏ não bé." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Cá basa kho thơm (dứa) chín nhừ + Canh rau cải ngọt nấu thịt băm", alt: "Cơm + Gà kho nấm đông cô + Canh bầu", note: "Cá basa cực giàu DHA/EPA, giá cả bình dân và cực dễ ăn." },
+        { meal: "Bữa phụ chiều (15:00)", main: "Chè đậu đen hạt sen mật ong ít đường", alt: "Bánh quy yến mạch + Trà hoa cúc", note: "Hỗ trợ thải độc, thanh nhiệt cơ thể hiệu quả." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Sườn rim mật ong mềm ngọt + Canh bí đỏ hầm xương cải", alt: "Cơm + Thịt chân giò luộc + Canh rau dền đỏ", note: "Bí đỏ giàu vitamin A hỗ trợ phát triển tế bào võng mạc của thai nhi." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa ấm tiệt trùng", alt: "Sữa hạt điều sen tự làm", note: "Duy trì canxi liên tục chống chuột rút bắp chân lúc rạng sáng." }
+      ],
+      "Thứ 7": [
+        { meal: "Bữa sáng (7:00)", main: "Bánh canh bột lọc giò heo hầm nhừ", alt: "Hủ tiếu mọc thịt nạc", note: "Giò heo chứa collagen, khoáng chất dồi dào phục hồi sức khỏe." },
+        { meal: "Bữa phụ sáng (9:30)", main: "Sinh tố bơ sầu riêng (chỉ dùng sầu riêng lượng cực ít)", alt: "1 quả táo ngọt + hạt bí ngô", note: "Quả bơ cung cấp năng lượng béo lành mạnh." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Bò né xào thiên lý hoa + Canh cua mồng tơi cải cúc", alt: "Cơm + Cá quả hấp bầu + Canh rong biển", note: "Combo giúp mẹ thư giãn tinh thần, chống mất ngủ những tuần cuối." },
+        { meal: "Bữa phụ chiều (15:00)", main: "1 hũ bánh flan sữa trứng thơm lừng", alt: "Sữa chua uống mát lạnh nhẹ", note: "Nạp năng lượng nhẹ nhàng cho buổi chiều năng động." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Tôm sú hấp bia sả chín kỹ + Canh khoai tây cà rốt hầm sườn heo", alt: "Cơm + Trứng hấp vân thịt + Canh cải ngọt", note: "Canh hầm sườn non giàu chất dinh dưỡng dễ húp cuối ngày." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa bầu ấm", alt: "Sữa đậu nành nóng", note: "Chăm sóc tối ưu sức khỏe cho cả mẹ và bé cưng." }
+      ],
+      "Chủ Nhật": [
+        { meal: "Bữa sáng (7:00)", main: "Phở tái bò chín nóng hổi", alt: "Bún chả cá thu chín kỹ nước trong", note: "Phở bò luôn là sự lựa chọn hoàn hảo chứa nhiều dưỡng chất bổ máu." },
+        { meal: "Bữa phụ sáng (9:30)", main: "Hạt chia ngâm nước dừa ấm + dâu tây cắt lát", alt: "Sinh tố chuối bơ sữa tươi", note: "Bổ sung điện giải và axit béo lành mạnh." },
+        { meal: "Bữa trưa (12:00)", main: "Cơm + Cá lóc hấp hành cuộn xà lách (rửa cực sạch) + Canh chua cá diêu hồng", alt: "Cơm + Gà kho gừng + Canh rau ngót", note: "Canh chua thơm ngon chống ngấy hiệu quả cho ngày cuối tuần." },
+        { meal: "Bữa phụ chiều (15:00)", main: "Yến sào chưng táo đỏ hạt sen sữa tươi", alt: "1 quả bắp luộc ngọt mềm", note: "Bồi bổ thể trạng toàn diện, sẵn sàng cho cơn chuyển dạ." },
+        { meal: "Bữa tối (18:30)", main: "Cơm + Thịt bò xào măng tây + Canh rong biển nấu mọc chín kỹ", alt: "Cơm + Đậu phụ nhồi thịt rán + Canh mướp", note: "Măng tây giàu sắt và canxi, là lựa chọn số một cho ngày chủ nhật kết tuần." },
+        { meal: "Bữa phụ tối (21:00)", main: "1 ly sữa tươi tiệt trùng ấm + vài hạt óc chó", alt: "Sữa hạt sen mật ong thơm dịu", note: "Giúp mẹ ngủ thật ngon giấc để đón tuần thai mới." }
+      ]
+    }
+  }
+};
+
+// --- DATA: RECOMMENDATIONS (CẤM / NÊN DÙNG) ---
+const RECOMMENDATIONS = {
+  shouldEat: [
+    { name: "Thịt đỏ chín kỹ (Bò, Heo)", benefit: "Giàu Sắt heme dồi dào, phòng chống thiếu máu thiếu sắt thai kỳ cực hiệu quả." },
+    { name: "Cá béo ít thủy ngân (Cá hồi, Cá lóc)", benefit: "Cung cấp Omega-3 DHA/EPA tự nhiên vô giá cho võng mạc và vỏ não thai nhi phát triển." },
+    { name: "Sữa và chế phẩm tiệt trùng", benefit: "Nguồn Canxi sinh khả dụng cao nhất, đồng thời bổ sung thêm Vitamin D giúp hấp thụ xương." },
+    { name: "Rau màu xanh đậm (Bông cải, Măng tây, Rau cải)", benefit: "Nguồn Acid Folic (Folate) dồi dào từ tự nhiên, hỗ trợ ống thần kinh khép kín an toàn." },
+    { name: "Trứng gia cầm chín kỹ", benefit: "Cung cấp Choline - chất truyền dẫn thần kinh cực tốt cho khả năng ghi nhớ của não bộ trẻ." },
+    { name: "Hạt dinh dưỡng (Óc chó, Hạnh nhân, Điều)", benefit: "Cung cấp chất béo lành mạnh thực vật, vitamin E và chất xơ chống táo bón." }
+  ],
+  mustAvoid: [
+    { name: "Thịt, cá, hải sản sống/tái (Sushi, Sashimi, Tiết canh)", reason: "Nguy cơ cao nhiễm ký sinh trùng (Sán) và vi khuẩn Listeria gây sảy thai, dị tật bẩm sinh." },
+    { name: "Sữa và chế phẩm chưa tiệt trùng", reason: "Chứa vi khuẩn Listeria monocytogenes có khả năng vượt qua hàng rào nhau thai gây tử vong thai nhi." },
+    { name: "Trứng lòng đào, trứng sống (Sốt mayonnaise tự làm)", reason: "Nguy cơ cao ngộ độc Salmonella gây tiêu chảy mất nước nặng và kích ứng tử cung co bóp sớm." },
+    { name: "Cá chứa hàm lượng thủy ngân cao (Cá kiếm, Cá ngừ đại dương)", reason: "Kim loại nặng thủy ngân tàn phá hệ thần kinh đang hình thành của thai nhi." },
+    { name: "Caffeine vượt mức quy định (> 200 mg/ngày)", reason: "Gây co thắt mạch máu nhau thai, làm giảm lượng máu nuôi thai, dẫn đến nhẹ cân hoặc sảy thai." },
+    { name: "Măng tươi chưa khử độc, Papaya xanh (Đu đủ xanh)", reason: "Măng tươi chứa cyanide độc tính cao; đu đủ xanh chứa nhựa latex kích hoạt co thắt tử cung mạnh mẽ." },
+    { name: "Rau ngót sống, Rau răm ăn nhiều", reason: "Chứa các chất gây hưng phấn tử cung, làm tăng co bóp cơ trơn dễ dẫn tới nguy cơ sảy thai." }
+  ],
+  sources: [
+    "Viện Dinh dưỡng Quốc gia - Bộ Y tế Việt Nam",
+    "Tổ chức Y tế Thế giới (WHO) - Hướng dẫn Dinh dưỡng Thai kỳ",
+    "Hiệp hội Sản phụ khoa Hoa Kỳ (ACOG) - Guidelines for Pregnancy Nutrition"
+  ]
+};
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState("development"); // "development" or "nutrition"
+  
+  // Tab 1: Development States
+  const [selectedWeek, setSelectedWeek] = useState(20);
+  
+  // Tab 2: Nutrition States
+  const [selectedTrimester, setSelectedTrimester] = useState(2);
+  const [selectedDay, setSelectedDay] = useState("Thứ 2");
+  const [swappedMeals, setSwappedMeals] = useState({}); // Stores key: 'trimester-day-mealIndex' -> boolean indicating alternative is chosen
+
+  // Weight Tracker Inputs
+  const [height, setHeight] = useState(160); // cm
+  const [weight, setWeight] = useState(55); // kg (pre-pregnancy)
+  const [currentWeek, setCurrentWeek] = useState(20); // week
+  const [currentWeight, setCurrentWeight] = useState(60); // kg
+  const [trackerCalculated, setTrackerCalculated] = useState(false);
+  const [calcResult, setCalcResult] = useState(null);
+
+  // Active trimester config helper
+  const triConfig = TRIDATA[selectedTrimester];
+
+  // Helper key for meal swapped state
+  const getMealKey = (tri, day, index) => `${tri}-${day}-${index}`;
+
+  const toggleMealSwap = (index) => {
+    const key = getMealKey(selectedTrimester, selectedDay, index);
+    setSwappedMeals(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
+  // BMI & Healthy Weight Gain Range calculation
+  const handleCalculateWeight = (e) => {
+    e.preventDefault();
+    const heightInMeters = height / 100;
+    const bmi = weight / (heightInMeters * heightInMeters);
+    
+    let category = "";
+    let recommendedTotalMin = 0;
+    let recommendedTotalMax = 0;
+    let ratePerWeekAfterT1 = 0; // kg/week in trimester 2 & 3
+
+    if (bmi < 18.5) {
+      category = "Thiếu cân (Underweight)";
+      recommendedTotalMin = 12.5;
+      recommendedTotalMax = 18.0;
+      ratePerWeekAfterT1 = 0.51; // kg/week
+    } else if (bmi >= 18.5 && bmi < 24.9) {
+      category = "Cân nặng bình thường (Normal)";
+      recommendedTotalMin = 11.5;
+      recommendedTotalMax = 16.0;
+      ratePerWeekAfterT1 = 0.42;
+    } else if (bmi >= 25.0 && bmi < 29.9) {
+      category = "Thừa cân (Overweight)";
+      recommendedTotalMin = 7.0;
+      recommendedTotalMax = 11.5;
+      ratePerWeekAfterT1 = 0.28;
+    } else {
+      category = "Béo phì (Obese)";
+      recommendedTotalMin = 5.0;
+      recommendedTotalMax = 9.0;
+      ratePerWeekAfterT1 = 0.22;
+    }
+
+    // Expected weight at current week
+    const averageT1Gain = 1.25; // mid point of 0.5 - 2.0 kg
+    let expectedMin = weight;
+    let expectedMax = weight;
+
+    if (currentWeek <= 13) {
+      const progressRatio = currentWeek / 13;
+      expectedMin = weight + (0.5 * progressRatio);
+      expectedMax = weight + (2.0 * progressRatio);
+    } else {
+      const weeksPostT1 = currentWeek - 13;
+      expectedMin = weight + 0.5 + (ratePerWeekAfterT1 * weeksPostT1 * 0.85); // conservative
+      expectedMax = weight + 2.0 + (ratePerWeekAfterT1 * weeksPostT1 * 1.15); // liberal
+    }
+
+    const currentGain = currentWeight - weight;
+    let statusText = "";
+    let statusColor = "";
+
+    if (currentWeight < expectedMin) {
+      statusText = "Tăng cân chậm hơn khuyến nghị. Mẹ hãy tham khảo ý kiến bác sĩ và bổ sung thêm chất dinh dưỡng.";
+      statusColor = "text-amber-600 bg-amber-50 border-amber-200";
+    } else if (currentWeight > expectedMax) {
+      statusText = "Tăng cân nhanh hơn khuyến nghị. Mẹ nên kiểm soát lượng tinh bột đường tinh chế và hỏi ý kiến bác sĩ để tầm soát tiểu đường thai kỳ.";
+      statusColor = "text-red-600 bg-red-50 border-red-200";
+    } else {
+      statusText = "Tăng cân hoàn hảo! Mẹ hãy tiếp tục duy trì chế độ ăn uống và tập luyện nhẹ nhàng hiện tại nhé.";
+      statusColor = "text-emerald-600 bg-emerald-50 border-emerald-200";
+    }
+
+    setCalcResult({
+      bmi: bmi.toFixed(1),
+      category,
+      recommendedTotal: `${recommendedTotalMin} - ${recommendedTotalMax} kg`,
+      expectedRange: `${expectedMin.toFixed(1)} - ${expectedMax.toFixed(1)} kg`,
+      currentGain: currentGain.toFixed(1),
+      statusText,
+      statusColor
+    });
+    setTrackerCalculated(true);
+  };
+
+  const handleResetWeight = () => {
+    setHeight(160);
+    setWeight(55);
+    setCurrentWeek(20);
+    setCurrentWeight(60);
+    setTrackerCalculated(false);
+    setCalcResult(null);
+  };
+
+  // Generate dynamic grocery list based on currently selected day's menu
+  const currentDayMeals = triConfig.days[selectedDay] || [];
+  const groceryList = useMemo(() => {
+    const list = [];
+    currentDayMeals.forEach((item, index) => {
+      const isSwapped = swappedMeals[getMealKey(selectedTrimester, selectedDay, index)];
+      const textToParse = isSwapped ? item.alt : item.main;
+      
+      if (textToParse.toLowerCase().includes("bò")) list.push("Thịt bò tươi ngon (đã khử trùng, chín kỹ)");
+      if (textToParse.toLowerCase().includes("gà")) list.push("Thịt gà ta sạch");
+      if (textToParse.toLowerCase().includes("tôm")) list.push("Tôm tươi / Tôm sứ nguyên vỏ");
+      if (textToParse.toLowerCase().includes("sữa tươi") || textToParse.toLowerCase().includes("sữa tiệt trùng")) list.push("Sữa tươi tiệt trùng 100%");
+      if (textToParse.toLowerCase().includes("sữa bầu")) list.push("Sữa bột công thức chuyên dụng cho bà bầu");
+      if (textToParse.toLowerCase().includes("sữa chua")) list.push("Sữa chua ăn hoặc sữa chua uống tiệt trùng");
+      if (textToParse.toLowerCase().includes("rau dền") || textToParse.toLowerCase().includes("dền đỏ")) list.push("Rau dền đỏ hữu cơ sạch");
+      if (textToParse.toLowerCase().includes("mồng tơi")) list.push("Rau mồng tơi tươi sạch");
+      if (textToParse.toLowerCase().includes("măng tây")) list.push("Măng tây non sạch nhiều folate");
+      if (textToParse.toLowerCase().includes("bông cải") || textToParse.toLowerCase().includes("súp lơ")) list.push("Súp lơ xanh / Bông cải tươi ngon");
+      if (textToParse.toLowerCase().includes("bí đỏ")) list.push("Bí đỏ hữu cơ");
+      if (textToParse.toLowerCase().includes("cá hồi")) list.push("Filet cá hồi tươi dồi dào DHA");
+      if (textToParse.toLowerCase().includes("quả bơ") || textToParse.toLowerCase().includes("bơ dầm")) list.push("Quả bơ chín tự nhiên");
+      if (textToParse.toLowerCase().includes("khoai lang")) list.push("Khoai lang mật hữu cơ");
+      if (textToParse.toLowerCase().includes("hạt") || textToParse.toLowerCase().includes("óc chó") || textToParse.toLowerCase().includes("hạnh nhân")) list.push("Hộp hạt tổng hợp (Óc chó, Hạnh nhân, Macca, Điều)");
+    });
+    return [...new Set(list)];
+  }, [selectedTrimester, selectedDay, swappedMeals]);
+
+  // Extract current week data
+  const weekData = WEEKS_DEVELOPMENT[selectedWeek] || WEEKS_DEVELOPMENT[1];
+
+  return (
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-800 antialiased">
+      
+      {/* HEADER SECTION */}
+      <header className="bg-gradient-to-r from-teal-700 via-emerald-700 to-emerald-800 text-white shadow-md relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.1),transparent)] pointer-events-none"></div>
+        <div className="max-w-6xl mx-auto px-4 py-8 relative z-10">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="text-center md:text-left">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-600/50 text-emerald-100 text-xs font-semibold mb-3 border border-emerald-500/30">
+                <Sparkles size={14} className="animate-pulse" />
+                Chuẩn Y Khoa Quốc Gia & WHO
+              </span>
+              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+                Hành Trình Bé Lớn Khôn & Dinh Dưỡng Mẹ Bầu
+              </h1>
+              <p className="mt-2 text-teal-100 max-w-2xl text-sm md:text-base leading-relaxed">
+                Ứng dụng đồng hành khoa học giúp mẹ bầu theo dõi sự phát triển chi tiết từng tuần của thai nhi, tính toán chỉ số sức khỏe, và lên thực đơn dinh dưỡng chuẩn y khoa.
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-5 py-4 rounded-xl border border-white/20 self-center md:self-auto">
+              <Heart className="text-pink-400 animate-bounce fill-pink-400" size={32} />
+              <div>
+                <div className="text-xs text-teal-200">Mốc thời gian chọn</div>
+                <div className="text-lg font-bold">Tuần thứ {activeTab === "development" ? selectedWeek : currentWeek}</div>
+                <div className="text-xs text-emerald-300">
+                  Tam cá nguyệt {(activeTab === "development" ? selectedWeek : currentWeek) <= 13 ? "1" : (activeTab === "development" ? selectedWeek : currentWeek) <= 27 ? "2" : "3"}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* TAB NAVIGATION PANEL */}
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex gap-4">
+            <button
+              onClick={() => setActiveTab("development")}
+              className={`flex items-center gap-2 py-4 px-4 font-bold text-sm border-b-2 transition-all ${
+                activeTab === "development"
+                  ? "border-teal-600 text-teal-600"
+                  : "border-transparent text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              <Baby size={18} />
+              Hành Trình Bé Lớn Khôn (40 Tuần)
+            </button>
+            <button
+              onClick={() => setActiveTab("nutrition")}
+              className={`flex items-center gap-2 py-4 px-4 font-bold text-sm border-b-2 transition-all ${
+                activeTab === "nutrition"
+                  ? "border-teal-600 text-teal-600"
+                  : "border-transparent text-slate-500 hover:text-slate-700"
+              }`}
+            >
+              <Utensils size={18} />
+              Thực Đơn Dinh Dưỡng Tương Tác
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* MAIN APPLICATION CONTAINER */}
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        
+        {/* TAB 1: FETAL DEVELOPMENT VISUALIZER */}
+        {activeTab === "development" && (
+          <div className="space-y-8">
+            
+            {/* WEEK SELECTOR SECTION */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+                <div>
+                  <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <span className="bg-teal-600 text-white text-xs px-2 py-1 rounded-md">Bước 1</span>
+                    Chọn Tuần Thai Phát Triển
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-1">Kéo thanh trượt hoặc sử dụng nút bấm để khám phá cột mốc của con yêu.</p>
+                </div>
+                
+                {/* Micro input */}
+                <div className="flex items-center gap-2 self-start md:self-auto">
+                  <button 
+                    onClick={() => setSelectedWeek(prev => Math.max(1, prev - 1))}
+                    className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                    disabled={selectedWeek === 1}
+                  >
+                    <ChevronLeft size={18} />
+                  </button>
+                  <div className="bg-teal-50 border border-teal-200 text-teal-800 px-4 py-1.5 rounded-xl font-bold text-base min-w-[120px] text-center">
+                    Tuần {selectedWeek} / 40
+                  </div>
+                  <button 
+                    onClick={() => setSelectedWeek(prev => Math.min(40, prev + 1))}
+                    className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                    disabled={selectedWeek === 40}
+                  >
+                    <ChevronRight size={18} />
+                  </button>
+                </div>
+              </div>
+
+              {/* Slider Input */}
+              <div className="py-4">
+                <input 
+                  type="range" 
+                  min="1" 
+                  max="40" 
+                  value={selectedWeek} 
+                  onChange={(e) => setSelectedWeek(Number(e.target.value))} 
+                  className="w-full h-3 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-teal-600" 
+                />
+                <div className="flex justify-between text-xs text-slate-400 mt-2 font-medium">
+                  <span className="text-emerald-600 font-bold">Thụ thai (Tuần 1)</span>
+                  <span className="text-emerald-600">Tam cá nguyệt 1</span>
+                  <span className="text-pink-600">Tam cá nguyệt 2</span>
+                  <span className="text-amber-600">Tam cá nguyệt 3</span>
+                  <span className="text-amber-600 font-bold">Sinh bé (Tuần 40)</span>
+                </div>
+              </div>
+
+              {/* Rapid Access Quick Badges */}
+              <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap gap-2">
+                <span className="text-xs text-slate-400 font-semibold self-center mr-1">Mốc quan trọng:</span>
+                <button onClick={() => setSelectedWeek(5)} className="text-xs bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 px-3 py-1.5 rounded-full font-medium transition-colors">Tuần 5: Tim thai đập</button>
+                <button onClick={() => setSelectedWeek(12)} className="text-xs bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 px-3 py-1.5 rounded-full font-medium transition-colors">Tuần 12: Đáy da gáy</button>
+                <button onClick={() => setSelectedWeek(20)} className="text-xs bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 px-3 py-1.5 rounded-full font-medium transition-colors">Tuần 20: Siêu âm 4D</button>
+                <button onClick={() => setSelectedWeek(24)} className="text-xs bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 px-3 py-1.5 rounded-full font-medium transition-colors">Tuần 24: Sàng lọc đường</button>
+                <button onClick={() => setSelectedWeek(37)} className="text-xs bg-slate-100 hover:bg-teal-50 hover:text-teal-700 text-slate-600 px-3 py-1.5 rounded-full font-medium transition-colors">Tuần 37: Thai đủ tháng</button>
+              </div>
+            </div>
+
+            {/* TWO-COLUMN DETAILED INFO PANEL */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              
+              {/* Left Side: Fruit Size Comparison Card */}
+              <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-between text-center relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-teal-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                
+                <div className="w-full">
+                  <span className="inline-block bg-teal-50 text-teal-700 border border-teal-200 px-3 py-1 rounded-full text-xs font-bold mb-4">
+                    Kích Thước Tuần {selectedWeek}
+                  </span>
+                  
+                  {/* Giant Emoji/Symbol representation */}
+                  <div className="text-7xl my-6 filter drop-shadow-md transform hover:scale-110 transition-transform duration-300">
+                    {weekData.fruitIcon}
+                  </div>
+                  
+                  <h3 className="text-xl font-extrabold text-slate-900 mt-2">{weekData.fruitName}</h3>
+                  <p className="text-xs text-slate-500 mt-1">So sánh kích thước trực quan</p>
+                </div>
+
+                <div className="w-full mt-6 grid grid-cols-2 gap-3 border-t border-slate-100 pt-5">
+                  <div className="bg-slate-50 p-3 rounded-xl">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Cân nặng</span>
+                    <span className="text-sm font-extrabold text-slate-800 block mt-1">{weekData.weight}</span>
+                  </div>
+                  <div className="bg-slate-50 p-3 rounded-xl">
+                    <span className="text-[10px] text-slate-400 font-bold uppercase block">Chiều dài</span>
+                    <span className="text-sm font-extrabold text-slate-800 block mt-1">{weekData.length}</span>
+                  </div>
+                </div>
+
+                <div className="w-full mt-4 bg-teal-50/50 rounded-xl p-3 border border-teal-100 text-xs text-teal-800 text-left">
+                  <span className="font-bold">Đặc trưng:</span> {weekData.sizeComparison}
+                </div>
+              </div>
+
+              {/* Right Side: Detailed Biological Milestones & Mom Care */}
+              <div className="lg:col-span-2 space-y-6">
+                
+                {/* Main Development Info */}
+                <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+                  <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <div className="bg-teal-600 text-white p-2.5 rounded-xl">
+                      <Baby size={22} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-slate-900">Mốc Phát Triển Của Bé - Tuần {selectedWeek}</h3>
+                      <p className="text-xs text-teal-600 font-semibold">{weekData.title}</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                        <span className="w-1.5 h-3 bg-teal-600 rounded-sm"></span>
+                        Trạng thái thai nhi:
+                      </h4>
+                      <p className="text-sm text-slate-600 mt-1 leading-relaxed">
+                        {weekData.description}
+                      </p>
+                    </div>
+
+                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
+                      <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <Sparkles size={14} className="text-amber-500" />
+                        Bước Ngoặt Sinh Học Lớn:
+                      </h4>
+                      <p className="text-sm text-slate-700 leading-relaxed font-medium">
+                        {weekData.babyMilestone}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Mom Care Instructions for Selected Week */}
+                <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white p-6 rounded-2xl shadow-sm space-y-3">
+                  <h4 className="font-bold text-base flex items-center gap-2">
+                    <Heart size={18} className="text-pink-300 fill-pink-300" />
+                    Chăm Sóc Sức Khỏe Cho Mẹ - Tuần {selectedWeek}
+                  </h4>
+                  <p className="text-sm text-emerald-50 leading-relaxed">
+                    {weekData.momCare}
+                  </p>
+                </div>
+
+              </div>
+
+            </div>
+
+            {/* GENERAL ADVICE FOR ALL PREGNANCIES */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <h3 className="text-base font-bold text-slate-900 mb-3 flex items-center gap-2">
+                <BookOpen size={18} className="text-teal-600" />
+                Các Xét Nghiệm Quan Trọng Không Được Bỏ Lỡ
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-1">
+                  <span className="text-xs font-bold text-emerald-600 uppercase block">Tuần 11 - 13</span>
+                  <h4 className="font-bold text-slate-800 text-sm">Đo độ mờ da gáy / NIPT</h4>
+                  <p className="text-xs text-slate-500">Tầm soát sớm hội chứng Down và các dị tật di truyền nghiêm trọng.</p>
+                </div>
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-1">
+                  <span className="text-xs font-bold text-pink-600 uppercase block">Tuần 20 - 24</span>
+                  <h4 className="font-bold text-slate-800 text-sm">Siêu âm hình thái học 4D</h4>
+                  <p className="text-xs text-slate-500">Kiểm tra chi tiết từng cơ quan, cấu trúc tim, sọ não, tay chân thai nhi.</p>
+                </div>
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-1">
+                  <span className="text-xs font-bold text-amber-600 uppercase block">Tuần 24 - 28</span>
+                  <h4 className="font-bold text-slate-800 text-sm">Nghiệm pháp dung nạp đường</h4>
+                  <p className="text-xs text-slate-500">Phát hiện sớm tiểu đường thai kỳ để điều chỉnh chế độ dinh dưỡng, tránh thai to hoặc đa ối.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        )}
+
+        {/* TAB 2: INTERACTIVE NUTRITION CALCULATORS & MENUS */}
+        {activeTab === "nutrition" && (
+          <div className="space-y-8">
+            
+            {/* STEP 1: SELECT TRIMESTER */}
+            <section className="mb-8">
+              <h2 className="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <span className="bg-teal-600 text-white text-xs px-2 py-1 rounded-md">Bước 1</span>
+                Chọn Giai Đoạn Phát Triển Của Bé
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {[1, 2, 3].map((num) => {
+                  const data = TRIDATA[num];
+                  const isActive = selectedTrimester === num;
+                  const borderCol = num === 1 ? "border-emerald-500" : num === 2 ? "border-pink-500" : "border-amber-500";
+                  const textCol = num === 1 ? "text-emerald-600" : num === 2 ? "text-pink-600" : "text-amber-600";
+                  
+                  return (
+                    <button
+                      key={num}
+                      onClick={() => {
+                        setSelectedTrimester(num);
+                        setCurrentWeek(num === 1 ? 7 : num === 2 ? 20 : 34);
+                      }}
+                      className={`relative p-5 text-left rounded-2xl border-2 transition-all duration-300 bg-white ${
+                        isActive 
+                          ? `${borderCol} shadow-lg scale-[1.02] ring-2 ring-opacity-20` 
+                          : 'border-slate-200 hover:border-slate-300 hover:shadow-md'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between">
+                        <span className={`text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
+                          num === 1 ? 'bg-emerald-50 text-emerald-700' : num === 2 ? 'bg-pink-50 text-pink-700' : 'bg-amber-50 text-amber-700'
+                        }`}>
+                          Tam cá nguyệt {num}
+                        </span>
+                        {isActive && (
+                          <CheckCircle2 size={18} className={textCol} />
+                        )}
+                      </div>
+                      <h3 className="font-bold text-lg text-slate-800 mt-3">{data.name}</h3>
+                      <p className="text-xs text-slate-500 mt-1 line-clamp-1">{data.subtitle}</p>
+                      
+                      <div className="mt-4 flex flex-wrap gap-1.5 border-t border-slate-100 pt-3">
+                        {data.keyNutrients.slice(0, 2).map((nut, i) => (
+                          <span key={i} className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md">
+                            {nut.name}
+                          </span>
+                        ))}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* PRIMARY LAYOUT GRID */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              
+              {/* LEFT 2 COLUMNS: INTERACTIVE WEEKLY MEAL PLANNER */}
+              <div className="lg:col-span-2 space-y-8">
+                
+                {/* TRIMESTER FOCUS CARDS */}
+                <div className={`p-6 rounded-2xl border ${triConfig.bgClass} shadow-sm`}>
+                  <h3 className="text-lg font-bold flex items-center gap-2">
+                    <Info size={20} />
+                    Tiêu Điểm Dinh Dưỡng: {triConfig.name}
+                  </h3>
+                  <p className="text-sm mt-2 leading-relaxed text-slate-700">
+                    {triConfig.guideline}
+                  </p>
+                  
+                  <div className="mt-5 grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-slate-200/60 pt-4">
+                    {triConfig.keyNutrients.map((nut, idx) => (
+                      <div key={idx} className="bg-white/80 backdrop-blur-sm p-3.5 rounded-xl border border-white/60">
+                        <div className="text-xs text-slate-500 font-semibold">{nut.name}</div>
+                        <div className="text-sm font-bold text-slate-800 mt-1">
+                          {nut.name === "Acid Folic" ? "400 - 600 µg/ngày" : nut.name === "Sắt" ? "30 mg/ngày" : nut.name === "Vitamin B6" ? "1.9 mg/ngày" : nut.name === "Canxi" ? "1000 - 1200 mg/ngày" : nut.name === "Sắt & Vitamin C" ? "30 mg Sắt/ngày" : nut.name === "Protein" ? "Tăng thêm +15g/ngày" : nut.name === "DHA / EPA" ? "200 - 300 mg/ngày" : nut.name === "Chất xơ & Nước" ? "28g Xơ + 2.5L Nước" : "+450 kcal/ngày"}
+                        </div>
+                        <div className="text-[11px] text-slate-500 mt-1 leading-normal">{nut.role}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* DAY SELECTOR TABS */}
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+                      <span className="bg-teal-600 text-white text-xs px-2 py-1 rounded-md">Bước 2</span>
+                      Lên Thực Đơn Theo Ngày
+                    </h2>
+                    <span className="text-xs text-slate-500 italic">Chọn một ngày để tra cứu món ăn</span>
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-2 pb-2 overflow-x-auto">
+                    {Object.keys(triConfig.days).map((day) => {
+                      const isDayActive = selectedDay === day;
+                      const activeColorClass = 
+                        selectedTrimester === 1 ? "bg-emerald-600 text-white border-emerald-600" :
+                        selectedTrimester === 2 ? "bg-pink-600 text-white border-pink-600" :
+                        "bg-amber-600 text-white border-amber-600";
+                      
+                      return (
+                        <button
+                          key={day}
+                          onClick={() => setSelectedDay(day)}
+                          className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all border shrink-0 ${
+                            isDayActive 
+                              ? `${activeColorClass} shadow-md`
+                              : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                          }`}
+                        >
+                          {day}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* THE MENU CARD CONTAINER */}
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                  <div className="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                    <div className="flex items-center gap-2">
+                      <Calendar size={18} className="text-slate-500" />
+                      <span className="font-bold text-slate-800">Thực Đơn Ngày {selectedDay}</span>
+                    </div>
+                    <span className="text-xs bg-slate-200 text-slate-700 px-2.5 py-1 rounded-full font-medium">
+                      {triConfig.days[selectedDay].length} bữa một ngày
+                    </span>
+                  </div>
+
+                  <div className="divide-y divide-slate-100">
+                    {triConfig.days[selectedDay].map((item, index) => {
+                      const key = getMealKey(selectedTrimester, selectedDay, index);
+                      const isSwapped = swappedMeals[key] || false;
+                      
+                      return (
+                        <div key={index} className="p-5 hover:bg-slate-50/50 transition-colors">
+                          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
+                            <div className="flex-1">
+                              <div className="flex items-center gap-2">
+                                <span className="inline-block w-2.5 h-2.5 rounded-full bg-teal-500"></span>
+                                <span className="text-xs font-bold uppercase tracking-wider text-teal-700">
+                                  {item.meal}
+                                </span>
+                              </div>
+
+                              <div className="mt-2">
+                                <h4 className="text-base font-bold text-slate-900 flex flex-wrap items-center gap-2">
+                                  {isSwapped ? (
+                                    <span className="line-through text-slate-400 font-medium">{item.main}</span>
+                                  ) : (
+                                    <span>{item.main}</span>
+                                  )}
+                                  {isSwapped && (
+                                    <span className="inline-flex items-center gap-1 text-xs bg-purple-50 text-purple-700 border border-purple-200 px-2.5 py-0.5 rounded-full">
+                                      Đã đổi món: {item.alt}
+                                    </span>
+                                  )}
+                                </h4>
+                              </div>
+
+                              {!isSwapped && (
+                                <p className="text-xs text-slate-500 mt-1 flex items-center gap-1.5">
+                                  <span className="font-semibold text-purple-600">Gợi ý đổi vị:</span>
+                                  {item.alt}
+                                </p>
+                              )}
+
+                              <div className="mt-3 bg-slate-100/70 rounded-lg p-2.5 border border-slate-200/40 text-xs text-slate-600 flex items-start gap-1.5">
+                                <span className="font-bold text-slate-700 shrink-0">Lưu ý khoa học:</span>
+                                <span>{item.note}</span>
+                              </div>
+                            </div>
+
+                            <div className="shrink-0 self-end sm:self-center">
+                              <button
+                                onClick={() => toggleMealSwap(index)}
+                                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border ${
+                                  isSwapped 
+                                    ? "bg-purple-100 text-purple-700 border-purple-200 hover:bg-purple-200" 
+                                    : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50 hover:border-slate-300"
+                                }`}
+                              >
+                                <RotateCcw size={12} />
+                                {isSwapped ? "Khôi phục món chính" : "Đổi món chống chán"}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* SAFE & WARNING BOXES */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {/* SHOULD EAT */}
+                  <div className="bg-white p-5 rounded-2xl border border-emerald-100 shadow-sm">
+                    <div className="flex items-center gap-2 text-emerald-700 border-b border-emerald-50 pb-3 mb-4">
+                      <CheckCircle2 size={22} className="fill-emerald-50" />
+                      <h3 className="font-bold text-lg">Khuyên Dùng Cho Mẹ</h3>
+                    </div>
+                    <div className="space-y-3.5">
+                      {RECOMMENDATIONS.shouldEat.map((rec, i) => (
+                        <div key={i} className="flex items-start gap-2.5 text-sm">
+                          <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-50 text-emerald-600 text-xs font-bold shrink-0 mt-0.5">
+                            ✓
+                          </span>
+                          <div>
+                            <h4 className="font-bold text-slate-900">{rec.name}</h4>
+                            <p className="text-xs text-slate-500 mt-0.5 leading-normal">{rec.benefit}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* MUST AVOID */}
+                  <div className="bg-white p-5 rounded-2xl border border-rose-100 shadow-sm">
+                    <div className="flex items-center gap-2 text-rose-700 border-b border-rose-50 pb-3 mb-4">
+                      <AlertTriangle size={22} className="fill-rose-50" />
+                      <h3 className="font-bold text-lg">Cấm / Hạn Chế Tuyệt Đối</h3>
+                    </div>
+                    <div className="space-y-3.5">
+                      {RECOMMENDATIONS.mustAvoid.map((rec, i) => (
+                        <div key={i} className="flex items-start gap-2.5 text-sm">
+                          <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-rose-50 text-rose-600 text-xs font-bold shrink-0 mt-0.5">
+                            ✕
+                          </span>
+                          <div>
+                            <h4 className="font-bold text-slate-900">{rec.name}</h4>
+                            <p className="text-xs text-slate-500 mt-0.5 leading-normal">{rec.reason}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* RIGHT 1 COLUMN: CALCULATORS & ASSISTIVE TOOLS */}
+              <div className="space-y-8">
+                
+                {/* WEIGHT GAIN TRACKER */}
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                  <div className="p-5 border-b border-slate-100 bg-gradient-to-r from-teal-50 to-emerald-50 flex items-center gap-2">
+                    <Calculator className="text-teal-600" size={20} />
+                    <h3 className="font-bold text-slate-800 text-base">Máy Tính Chỉ Số Tăng Cân (IOM)</h3>
+                  </div>
+                  
+                  <div className="p-5">
+                    <form onSubmit={handleCalculateWeight} className="space-y-4">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Chiều cao của mẹ (cm)</label>
+                        <input 
+                          type="number" 
+                          value={height} 
+                          onChange={(e) => setHeight(Number(e.target.value))} 
+                          className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none" 
+                          required
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Cân trước bầu (kg)</label>
+                          <input 
+                            type="number" 
+                            value={weight} 
+                            onChange={(e) => setWeight(Number(e.target.value))} 
+                            className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none" 
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-bold text-slate-600 uppercase mb-1">Cân hiện tại (kg)</label>
+                          <input 
+                            type="number" 
+                            value={currentWeight} 
+                            onChange={(e) => setCurrentWeight(Number(e.target.value))} 
+                            className="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none" 
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="flex justify-between items-center mb-1">
+                          <label className="block text-xs font-bold text-slate-600 uppercase">Tuần thai hiện tại ({currentWeek} tuần)</label>
+                          <span className="text-xs font-bold text-teal-600">Tháng thứ {Math.ceil(currentWeek / 4.3)}</span>
+                        </div>
+                        <input 
+                          type="range" 
+                          min="1" 
+                          max="40" 
+                          value={currentWeek} 
+                          onChange={(e) => {
+                            const val = Number(e.target.value);
+                            setCurrentWeek(val);
+                            if (val <= 13) setSelectedTrimester(1);
+                            else if (val <= 27) setSelectedTrimester(2);
+                            else setSelectedTrimester(3);
+                          }} 
+                          className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-teal-600" 
+                        />
+                      </div>
+
+                      <div className="pt-2 flex gap-3">
+                        <button 
+                          type="submit" 
+                          className="flex-1 bg-teal-600 text-white font-bold text-sm py-2.5 px-4 rounded-xl hover:bg-teal-700 transition-colors shadow-sm"
+                        >
+                          Kiểm Tra Sức Khỏe
+                        </button>
+                        <button 
+                          type="button" 
+                          onClick={handleResetWeight}
+                          className="bg-slate-100 text-slate-600 p-2.5 rounded-xl hover:bg-slate-200 transition-colors"
+                          title="Thiết lập lại"
+                        >
+                          <RotateCcw size={18} />
+                        </button>
+                      </div>
+                    </form>
+
+                    {trackerCalculated && calcResult && (
+                      <div className="mt-5 border-t border-slate-100 pt-5 space-y-4">
+                        <div className="grid grid-cols-2 gap-3 text-center">
+                          <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <div className="text-[10px] text-slate-500 font-bold uppercase">BMI Trước Bầu</div>
+                            <div className="text-xl font-extrabold text-slate-800 mt-1">{calcResult.bmi}</div>
+                            <div className="text-[9px] text-slate-500 mt-0.5 font-medium">{calcResult.category}</div>
+                          </div>
+                          <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <div className="text-[10px] text-slate-500 font-bold uppercase">Tổng Tăng Cần</div>
+                            <div className="text-xl font-extrabold text-teal-700 mt-1">+{calcResult.currentGain} kg</div>
+                            <div className="text-[9px] text-slate-500 mt-0.5 font-medium">Đã tăng thực tế</div>
+                          </div>
+                        </div>
+
+                        <div className="p-3.5 rounded-xl border border-slate-100 bg-slate-50/50 space-y-2">
+                          <div className="flex justify-between text-xs">
+                            <span className="text-slate-500 font-medium">Khoảng tăng tối đa thai kỳ:</span>
+                            <span className="font-bold text-slate-800">{calcResult.recommendedTotal}</span>
+                          </div>
+                          <div className="flex justify-between text-xs">
+                            <span className="text-slate-500 font-medium">Chuẩn cân nặng tuần {currentWeek}:</span>
+                            <span className="font-bold text-teal-700">{calcResult.expectedRange}</span>
+                          </div>
+                        </div>
+
+                        <div className={`p-4 rounded-xl border text-xs leading-relaxed ${calcResult.statusColor}`}>
+                          <span className="font-bold block mb-1">Đánh giá sức khỏe:</span>
+                          {calcResult.statusText}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* QUICK GROCERY / PREPARATION LIST */}
+                <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                  <div className="p-5 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <ShoppingBag className="text-purple-600" size={18} />
+                      <h3 className="font-bold text-slate-800 text-sm">Đi Chợ Cho Ngày {selectedDay}</h3>
+                    </div>
+                    <span className="text-[10px] bg-purple-50 text-purple-700 px-2 py-0.5 rounded-md font-bold">Tự Động</span>
+                  </div>
+                  <div className="p-5">
+                    <p className="text-xs text-slate-500 mb-3 leading-normal">
+                      Danh sách nguyên liệu gợi ý tương ứng với các món ăn bạn đã chọn trong thực đơn hôm nay:
+                    </p>
+                    {groceryList.length > 0 ? (
+                      <ul className="space-y-2">
+                        {groceryList.map((item, i) => (
+                          <li key={i} className="flex items-center gap-2.5 text-xs text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                            <input type="checkbox" className="rounded text-teal-600 focus:ring-teal-500 h-3.5 w-3.5" />
+                            <span className="font-medium">{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <div className="text-center py-6 text-slate-400 text-xs">
+                        Không có dữ liệu nguyên liệu của thực đơn ngày này.
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* CREDIBLE ORGANIZATIONS REFERENCES */}
+                <div className="bg-slate-100 p-5 rounded-2xl border border-slate-200/60">
+                  <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <BookOpen size={14} />
+                    Nguồn Tham Chiếu Uy Tín
+                  </h4>
+                  <ul className="space-y-1.5">
+                    {RECOMMENDATIONS.sources.map((src, i) => (
+                      <li key={i} className="text-[11px] text-slate-500 flex items-start gap-1">
+                        <span className="text-teal-600 mt-0.5">•</span>
+                        <span>{src}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-4 border-t border-slate-200/60 pt-3 text-[10px] text-slate-400 italic">
+                    *Các thông tin trên ứng dụng chỉ mang tính chất tham khảo hữu ích. Mẹ hãy luôn tuân thủ phác đồ khám thai và tham vấn ý kiến từ bác sĩ sản khoa trực tiếp chăm sóc mẹ.
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        )}
+
+      </main>
+
+      {/* FOOTER */}
+      <footer className="bg-slate-900 text-slate-400 text-xs py-8 mt-12 border-t border-slate-800">
+        <div className="max-w-6xl mx-auto px-4 text-center space-y-3">
+          <p>© 2026 Cẩm Nang & Thực Đơn Dinh Dưỡng Thai Kỳ. Thiết kế chuẩn y khoa quốc gia.</p>
+          <p className="text-slate-600">Phát triển chuyên biệt để hỗ trợ bà bầu lên thực đơn và bảo vệ sức khỏe bé từ bụng mẹ.</p>
+        </div>
+      </footer>
+
+    </div>
+  );
+}
+
+```
