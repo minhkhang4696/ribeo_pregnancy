@@ -892,12 +892,15 @@
                               <h3 className="font-bold text-lg text-slate-800 mt-3">{data.name}</h3>
                               <p className="text-xs text-slate-500 mt-1 line-clamp-1">{data.subtitle}</p>
                               
-                              <div className="mt-4 flex flex-wrap gap-1.5 border-t border-slate-100 pt-3">
+                              <div className="mt-4 flex flex-wrap gap-1.5 border-t border-slate-100 pt-3 items-center">
                                 {data.keyNutrients.slice(0, 2).map((nut, i) => (
                                   <span key={i} className="text-[10px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-md font-semibold">
                                     {nut.name}
                                   </span>
                                 ))}
+                                  <span className="ml-auto text-[10px] text-slate-400 font-semibold flex items-center">
+                                      {data.weighgainMax}
+                                  </span>
                               </div>
                             </button>
                           );
